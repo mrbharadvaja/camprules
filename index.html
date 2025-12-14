@@ -20,7 +20,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* International Standard Font */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         body {
@@ -90,14 +90,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 2000px; /* Enhanced 3D depth */
+            perspective: 2000px;
             overflow: hidden;
             padding: 20px;
             background: radial-gradient(circle at center, #555 0%, #1a1a1a 100%);
         }
 
         .book {
-            width: 550px; /* A4 Ratio-ish */
+            width: 550px;
             height: 750px;
             position: relative;
             transform-style: preserve-3d;
@@ -110,10 +110,10 @@
             width: 100%;
             height: 100%;
             background-color: var(--white);
-            border-radius: 4px; /* Sharper corners for documents */
-            box-shadow: inset 20px 0 50px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.3); /* Spine shadow effect */
+            border-radius: 4px;
+            box-shadow: inset 20px 0 50px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.3);
             transform-origin: left center;
-            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1); /* Realistic page turn */
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
             transform-style: preserve-3d;
             display: flex;
             flex-direction: column;
@@ -126,7 +126,6 @@
             pointer-events: none;
         }
 
-        /* Back of the page (Shadow/Texture) */
         .page::after {
             content: '';
             position: absolute;
@@ -140,12 +139,11 @@
 
         /* --- PAGE CONTENT --- */
         .page-content {
-            padding: 40px 50px; /* Official margins */
+            padding: 40px 50px;
             height: 100%;
-            overflow-y: auto; /* Allow scrolling for detailed text */
+            overflow-y: auto;
             color: var(--text-grey);
             background: var(--white);
-            /* Scrollbar styling */
             scrollbar-width: thin;
             scrollbar-color: var(--mustard-yellow) #f0f0f0;
         }
@@ -154,7 +152,6 @@
         .page-content::-webkit-scrollbar-track { background: #f0f0f0; }
         .page-content::-webkit-scrollbar-thumb { background-color: var(--mustard-yellow); border-radius: 3px; }
 
-        /* Typography */
         h1, h2, h3, h4, h5 { color: var(--black); margin-bottom: 15px; line-height: 1.2; }
         h2 { border-bottom: 2px solid var(--mustard-yellow); padding-bottom: 10px; font-size: 1.4rem; text-transform: uppercase; }
         h3 { color: var(--black); font-size: 1.1rem; margin-top: 20px; font-weight: 700; }
@@ -167,11 +164,15 @@
         .highlight-red { color: var(--bright-red); font-weight: bold; }
         .box-warning { border: 2px solid var(--bright-red); background: #fff0f0; padding: 15px; margin: 15px 0; border-radius: 4px; }
         
-        /* Tables */
         table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.85rem; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         th { background-color: var(--black); color: var(--white); }
         tr:nth-child(even) { background-color: #f9f9f9; }
+
+        .qr-container { display: flex; justify-content: center; gap: 20px; margin: 20px 0; flex-wrap: wrap; }
+        .qr-box { text-align: center; }
+        .qr-box img { width: 100px; height: 100px; border: 1px solid #ccc; padding: 2px; }
+        .qr-box span { display: block; font-size: 0.75rem; margin-top: 5px; font-weight: bold; color: var(--black); max-width: 100px; }
 
         /* --- COVER PAGE SPECIFIC --- */
         .cover-page {
@@ -184,10 +185,10 @@
             color: white;
             border-left: 15px solid var(--mustard-yellow);
         }
-        .cover-logo { font-size: 4rem; color: var(--parrot-green); margin-bottom: 20px; }
-        .cover-title { font-size: 2.5rem; color: var(--white); margin-bottom: 10px; font-weight: 900; }
-        .cover-subtitle { font-size: 1.2rem; color: var(--mustard-yellow); margin-bottom: 50px; letter-spacing: 1px; }
-        .doc-control { border-top: 1px solid #666; padding-top: 20px; font-size: 0.8rem; color: #aaa; width: 100%; display: flex; justify-content: space-between; }
+        .cover-logo { font-size: 3rem; color: var(--parrot-green); margin-bottom: 20px; }
+        .cover-title { font-size: 2.2rem; color: var(--white); margin-bottom: 10px; font-weight: 900; }
+        .cover-subtitle { font-size: 1.1rem; color: var(--mustard-yellow); margin-bottom: 30px; letter-spacing: 1px; }
+        .doc-control { border-top: 1px solid #666; padding-top: 20px; font-size: 0.7rem; color: #aaa; width: 100%; text-align: center; line-height: 1.4; }
 
         /* --- NAVIGATION --- */
         .page-footer-nav {
@@ -213,6 +214,7 @@
         }
         .nav-btn:hover { background: var(--mustard-yellow); color: black; }
         .btn-home { background: var(--bright-red); }
+        .btn-disabled { display: none; }
 
         /* --- FOOTER MARQUEE --- */
         footer {
@@ -233,7 +235,7 @@
         .marquee span {
             display: inline-block;
             padding-left: 100%;
-            animation: scroll 25s linear infinite;
+            animation: scroll 30s linear infinite;
             color: var(--parrot-green);
             font-weight: bold;
             font-size: 0.9rem;
@@ -243,7 +245,6 @@
             100% { transform: translate(-100%, 0); }
         }
 
-        /* --- RESPONSIVE --- */
         @media (max-width: 600px) {
             .book { width: 95vw; height: 80vh; }
             .page-content { padding: 20px 25px; }
@@ -260,7 +261,6 @@
     </header>
 
     <div class="controls-bar">
-        <!-- Added IDs to buttons for direct JS selection -->
         <button class="lang-btn active" onclick="setLang('en')" id="btn-en">English</button>
         <button class="lang-btn" onclick="setLang('id')" id="btn-id">Indonesia</button>
         <button class="lang-btn" onclick="setLang('jp')" id="btn-jp">日本語</button>
@@ -274,22 +274,30 @@
 
     <footer>
         <div class="marquee">
-            <span id="footer-text">SAFETY FIRST • ZERO INCIDENTS • COMPLY WITH ANNEX-1 • RESPECT LOCAL CULTURE • REPORT UNSAFE ACTS • EMERGENCY: 123-456</span>
+            <span id="footer-text">LOADING...</span>
         </div>
     </footer>
 
     <script>
-        // --- CONTENT DATA (DETAILED) ---
-        // Structure: Title, Content HTML
-        // Note: English is the Primary Official Text. ID/JP are provided for interface & key summaries.
-
         const content = {
             en: [
                 {
                     type: "cover",
                     title: "CAMP RULES",
                     subtitle: "FACILITY USER GUIDELINES (REV.0)",
-                    details: "JGC Operated Camps<br>Main Contractor: JGC | Operator: KGP | Client: BP"
+                    details: `
+                        <b>Doc No:</b> JGC-UCC-CAMP-SOP-001 | <b>Date:</b> 12-Dec-2025<br>
+                        <b>Contractor:</b> JGC INDONESIA | <b>Operator:</b> PT KGP | <b>Client:</b> BP BERAU LTD<br>
+                        Prepared By: Deepak Sharma | Reviewed By: Ryota Kikuchi & Adhi Sumarhadi
+                    `,
+                    extra: `
+                        <div class="qr-container">
+                            <div class="qr-box">
+                                <img src="https://i.imgur.com/AX4mx36.png" alt="Rules">
+                                <span>Scan for<br>Full Rules</span>
+                            </div>
+                        </div>
+                    `
                 },
                 {
                     type: "toc",
@@ -300,31 +308,39 @@
                     title: "1.0 PURPOSE & SCOPE",
                     body: `
                         <h3>1.1 Objective</h3>
-                        <p>The objective of this document is to establish a mandatory framework for the safe, hygienic, secure, and respectful operation of all JGC-operated accommodations within the Tangguh LNG UCC Project. These rules ensure compliance with <b>BP HSSE Standards</b> and <b>Annex-1 Requirements</b>.</p>
-                        <h3>1.2 Scope</h3>
-                        <p>These guidelines apply to <b>all personnel</b> residing in or visiting JGC-operated camps (NEC, ComCon, Phoenix, Pioneer), including:</p>
+                        <p>The objective of this document is to establish a mandatory framework for the safe, hygienic, secure, and respectful operation of all JGC-operated accommodations within the Tangguh LNG UCC Project. These rules are designed to:</p>
                         <ul>
-                            <li>JGC Employees and Staff</li>
-                            <li>Subcontractors (Hydrocore, Leighton, Rapid, etc.)</li>
-                            <li>Camp Operators (KGP, GDSK, NEC, Comcon)</li>
-                            <li>Service Vendors and Visitors</li>
+                            <li>Ensure compliance with <b>BP HSSE Standards</b> and <b>Annex-1 Requirements</b>.</li>
+                            <li>Prevent Operational Downtime caused by camp-related incidents or illness.</li>
+                            <li>Maintain harmony between the project workforce and the local Papuan community.</li>
                         </ul>
+                        <h3>1.2 Scope</h3>
+                        <p>These guidelines apply to <b>all personnel</b> residing in or visiting the JGC-operated camps (NEC, ComCon, Phoenix), including:</p>
+                        <ul>
+                            <li>JGC Employees and Staff.</li>
+                            <li>Subcontractors (Hydrocore, Leighton, Rapid, etc.).</li>
+                            <li>Camp Operators (KGP-GDSK).</li>
+                            <li>Service Vendors and Visitors.</li>
+                        </ul>
+                        <h3>1.3 Authority</h3>
+                        <p><b>JGC:</b> Retains overall authority regarding room allocation, disciplinary measures, HSSE oversight, and standard enforcement.<br>
+                        <b>Camp Operator (PT KGP):</b> Responsible for daily execution of services (Catering, Housekeeping, Maintenance) and reporting violations to JGC.</p>
                     `
                 },
                 {
                     type: "standard",
-                    title: "2.0 ORGANIZATION",
+                    title: "2.0 PROJECT OVERVIEW",
                     body: `
-                        <h3>2.1 Stakeholder Matrix</h3>
+                        <h3>2.1 Project Summary</h3>
+                        <p>The Tangguh LNG UCC Project operates in a remote, high-security environment in Papua Barat. High standards of safety and SIMOPS (Simultaneous Operations) management are required. The camp currently supports a workforce of 3,000+ personnel.</p>
+                        <h3>2.2 Stakeholder Responsibilities</h3>
                         <table>
-                            <tr><th>Company</th><th>Role</th></tr>
+                             <tr><th>Company</th><th>Role</th></tr>
                             <tr><td>PT JGC Indonesia</td><td>Main Contractor (Camp Gov)</td></tr>
                             <tr><td>PT KSO GDSK (KGP)</td><td>Camp Operator (Ops)</td></tr>
                             <tr><td>PT Kuehne Nagel</td><td>Logistics</td></tr>
                             <tr><td>BP Berau Ltd</td><td>Client / Owner</td></tr>
                         </table>
-                        <h3>2.2 Camp Operator Mandate</h3>
-                        <p>PT GDSK PID (PT KGP) performs daily services under JGC oversight, including Housekeeping, Laundry, Catering, and Pest Control. JGC retains authority for room allocation and disciplinary actions.</p>
                     `
                 },
                 {
@@ -332,12 +348,23 @@
                     title: "3.0 ARRIVAL & DEPARTURE",
                     body: `
                         <h3>3.1 Check-In (Arrival)</h3>
-                        <p>All personnel must present a valid Site ID (Badge) and approved Movement Order. Residents will receive a Room Key, Linen Set, and Laundry Bag upon induction.</p>
-                        <div class="box-warning">
-                            <b>3.2 Inventory Check:</b> Defects must be reported within <b>2 hours</b> of Check-In. Failure to report damages implies acceptance of liability.
+                        <p>All personnel must present a Valid Site ID (Badge), Approved Movement Order, and Medical Clearance. Residents will receive a Room Key (or Card), Bed Linen Set, and Laundry Bag. A mandatory brief on Camp Rules will be conducted.</p>
+                         <div class="qr-container">
+                            <div class="qr-box">
+                                <img src="https://i.imgur.com/ivsPL5x.png" alt="Induction Video">
+                                <span>Induction<br>Video</span>
+                            </div>
+                            <div class="qr-box">
+                                <img src="https://i.imgur.com/A7KbjKK.png" alt="Site Guide">
+                                <span>Site Fam<br>Guide</span>
+                            </div>
                         </div>
-                        <h3>3.3 Check-Out</h3>
-                        <p>Residents must return all issued items. Lost keys or damaged linen will be charged to the resident's company before exit clearance is signed.</p>
+                        <h3>3.2 Room Inventory</h3>
+                        <div class="box-warning">
+                            <b>Defect Reporting:</b> Any existing damage must be reported to Reception within <b>2 hours</b> of Check-In. Failure to do so will result in the resident being held liable.
+                        </div>
+                        <h3>3.3 Check-Out & Storage</h3>
+                        <p>Residents must return all issued items. Costs for missing items must be settled prior to departure. <b>Rota-Off Storage:</b> Items left in the bag store for more than <b>30 days</b> without contact will be disposed of.</p>
                     `
                 },
                 {
@@ -345,41 +372,40 @@
                     title: "4.0 PUBLIC FACILITIES",
                     body: `
                         <h3>4.1 Recreation Hall</h3>
-                        <p><b>Hours:</b> 10:00 – 21:00. Eating, sleeping, or smoking inside is strictly prohibited. Equipment (Pool cues, paddles) must be returned.</p>
-                        <h3>4.2 Worship Areas</h3>
-                        <p>Mosque & Church areas require strict silence. No sleeping or storage of personal items allowed inside prayer halls.</p>
-                        <h3>4.3 Wi-Fi Usage</h3>
-                        <p>Network is for welfare communication. <b>High-bandwidth streaming</b> (Netflix/YouTube HD) is restricted during peak hours (19:00-22:00) to ensure connectivity for all.</p>
+                        <p><b>Operating Hours:</b> 10:00 – 21:00. <br><b>Prohibitions:</b> No eating, sleeping, or smoking inside. Pool cues and paddles must be returned after use.</p>
+                        <h3>4.2 Commissary / Shop</h3>
+                        <p>Sales are strictly Cashless/Cash as per site policy. No credit/tabs. Sale of contraband is grounds for termination.</p>
+                        <h3>4.3 Worship (Mosque & Church)</h3>
+                        <p>Strict silence. No sleeping or storage of personal items inside prayer areas.</p>
+                        <h3>4.4 Wi-Fi & IT Usage</h3>
+                        <div style="background:#eee; padding:10px; border-left:5px solid var(--parrot-green); margin:10px 0;">
+                            <b>Wi-Fi Name:</b> Kasuari<br>
+                            <b>Password:</b> oneteamtannguh
+                        </div>
+                        <p>Excessive downloading and HD streaming are restricted during <b>Peak Hours (19:00–22:00)</b>. No illegal or pornographic content.</p>
                     `
                 },
                 {
                     type: "standard",
-                    title: "5.0 ROOM RULES (1/2)",
+                    title: "5.0 ROOM REGULATIONS",
                     body: `
                         <h3>5.1 Room Allocation</h3>
-                        <p>Rooms are assigned by JGC Camp Admin only. Unauthorized swapping is prohibited. Management reserves the right to re-optimize POB.</p>
-                        <h3>5.2 Energy Conservation</h3>
+                        <p>Rooms are allocated by JGC Camp Management only. Unauthorized swapping is prohibited. Rooms are not permanent; management reserves the right to reassign based on POB.</p>
+                        <h3>5.2 Standards</h3>
                         <ul>
-                            <li><b>AC:</b> Set to 24°C when occupied.</li>
-                            <li><b>Lights:</b> Must be turned off when leaving.</li>
-                            <li><b>Windows:</b> Keep closed to prevent insects and mold.</li>
+                            <li><b>AC:</b> Recommended 24°C to prevent mold.</li>
+                            <li><b>Lights:</b> Turn off when unoccupied.</li>
+                            <li><b>Windows:</b> Keep closed to prevent insects.</li>
                         </ul>
-                    `
-                },
-                {
-                    type: "standard",
-                    title: "5.0 ROOM RULES (2/2)",
-                    body: `
-                        <h3>5.3 STRICT PROHIBITIONS</h3>
-                        <p>The following act as <b>Zero Tolerance</b> violations:</p>
+                        <h3>5.3 STRICT PROHIBITIONS (Zero Tolerance)</h3>
                         <ul class="highlight-red">
-                            <li>Cooking (Rice cookers, hot plates, gas burners).</li>
-                            <li>Smoking inside rooms or corridors.</li>
-                            <li>Possession of Alcohol or Illegal Drugs.</li>
-                            <li>Opposite Gender in bedrooms.</li>
+                            <li>Cooking (Rice cookers, hot plates, toasters).</li>
+                            <li>Smoking in rooms and corridors.</li>
+                            <li>Alcohol / Drugs possession or consumption.</li>
+                            <li>Opposite Gender entry.</li>
                             <li>Storing industrial tools or flammables.</li>
                         </ul>
-                        <p><b>Right of Inspection:</b> JGC HSSE reserves the right to inspect rooms for compliance without prior notice.</p>
+                        <p><b>Right of Inspection:</b> JGC reserves the right to inspect rooms for compliance without prior notice.</p>
                     `
                 },
                 {
@@ -387,22 +413,37 @@
                     title: "6.0 SERVICES",
                     body: `
                         <h3>6.1 Housekeeping</h3>
-                        <p>Service daily 08:00–17:00. Night shift workers must use "Do Not Disturb" tags. Rooms are cleaned only if accessible.</p>
-                        <h3>6.2 Laundry</h3>
-                        <p>Turnaround time is 24 hours. Use the provided mesh bag and slip. Contractor is not liable for shrinkage of delicate personal clothing.</p>
+                        <p>Service Hours: <b>06:00 – 17:00 Daily</b>. Night shift residents must use "Do Not Disturb" tags.</p>
+                        <h3>6.2 Laundry Services</h3>
+                        <p>Turnaround is 24 hours. Use the provided bag and slip. Operator is not liable for color bleeding or shrinkage.</p>
+                        <div class="qr-container">
+                            <div class="qr-box">
+                                <img src="https://i.imgur.com/bmzixgK.png" alt="Laundry Guide">
+                                <span>Laundry<br>Guidelines</span>
+                            </div>
+                            <div class="qr-box">
+                                <img src="https://i.imgur.com/q0bAdpw.png" alt="Laundry App">
+                                <span>Laundry<br>Mobile App</span>
+                            </div>
+                        </div>
                         <h3>6.3 Maintenance</h3>
-                        <p>Do not attempt self-repair. Report AC, plumbing, or electrical faults to Reception immediately via the QR system.</p>
+                        <p>Do not attempt self-repairs. Report faults immediately to Reception or via the QR Code system.</p>
                     `
                 },
                 {
                     type: "standard",
-                    title: "7.0 DINING (MESS HALL)",
+                    title: "7.0 MESS HALL & DINING",
                     body: `
-                        <h3>7.1 Etiquette</h3>
-                        <p>Mandatory hand washing before entry. Proper attire required (No sleeveless shirts, no dirty PPE coveralls). Clear your own tray to the waste station.</p>
+                        <h3>7.1 Dining Etiquette</h3>
+                        <ul>
+                            <li><b>Hand Washing:</b> Mandatory before entry.</li>
+                            <li><b>Dress Code:</b> No sleeveless shirts, dirty coveralls (PPE), pajamas, or towels. Footwear mandatory.</li>
+                            <li><b>Trays:</b> Clear your own tray and separate waste.</li>
+                        </ul>
                         <div class="box-warning">
-                            <b>7.2 NO TAKE-AWAY:</b> Removing food, crockery, or utensils is strictly prohibited to prevent pest infestation in rooms. Sick residents need a medical note for room service.
+                            <b>7.2 NO TAKE-AWAY:</b> Removing food, crockery, or cutlery is strictly prohibited to prevent pest infestation. (Exception: Sick residents with medical note).
                         </div>
+                        <p><b>Allergies:</b> Report to Camp Boss upon check-in.</p>
                     `
                 },
                 {
@@ -410,25 +451,30 @@
                     title: "8.0 HSSE & SECURITY",
                     body: `
                         <h3>8.1 Identification</h3>
-                        <p>Site Badges must be visible at all times in public areas.</p>
-                        <h3>8.2 Emergency Response</h3>
-                        <ul>
-                            <li><b>Fire Alarm:</b> Evacuate to Muster Point immediately.</li>
-                            <li><b>Earthquake:</b> Drop, Cover, and Hold.</li>
-                        </ul>
-                        <p class="highlight-red">Tampering with Smoke Detectors results in immediate TERMINATION.</p>
-                        <h3>8.3 Waste Management</h3>
-                        <p>Segregate waste: <b>Green</b> (Organic), <b>Yellow</b> (Inorganic/Plastic), <b>Red</b> (Hazardous).</p>
+                        <p>Camp ID / Site Badge must be visible at all times outside the room.</p>
+                        <h3>8.2 Smoking Policy</h3>
+                        <p>Permitted <b>ONLY</b> in designated Smoking Shelters. Dispose of butts in sand buckets.</p>
+                        <h3>8.3 Emergency Protocols</h3>
+                        <p><b>Fire Alarm:</b> Evacuate to Muster Point immediately.<br>
+                        <b>Earthquake:</b> "Drop, Cover, and Hold."<br>
+                        <span class="highlight-red">Tampering with smoke detectors or extinguishers results in immediate permanent expulsion.</span></p>
+                        <h3>8.4 Waste Management</h3>
+                        <p>Segregate: <b>Green</b> (Organic), <b>Yellow</b> (Inorganic), <b>Red</b> (Hazardous).</p>
                     `
                 },
                 {
                     type: "standard",
-                    title: "10.0 SOCIAL & CULTURE",
+                    title: "9.0 TRANSPORT & SOCIAL",
                     body: `
-                        <h3>10.1 Papuan Indigenous Respect</h3>
-                        <p>The project operates on Papuan land. Residents must respect local customs. Aggressive behavior or offensive language towards the local workforce is strictly prohibited.</p>
-                        <h3>10.2 Anti-Harassment</h3>
-                        <p>Sexual harassment, bullying, or fighting will result in immediate handover to authorities and permanent camp ban.</p>
+                        <h3>9.0 Vehicle & Transport</h3>
+                        <ul>
+                            <li><b>Speed Limit:</b> Maximum <b>10 km/h</b> within camp.</li>
+                            <li><b>Parking:</b> Reverse parking mandatory in marked spots.</li>
+                            <li><b>Pedestrians:</b> Have right of way at all times.</li>
+                        </ul>
+                        <h3>10.0 Social Responsibility</h3>
+                        <p><b>10.1 Papuan Etiquette:</b> Respect local customs. Avoid offensive language. Report conflicts to JGC WFM immediately.</p>
+                        <p><b>10.2 Privacy:</b> Photography of residents without consent is prohibited. Zero tolerance for harassment or bullying.</p>
                     `
                 },
                 {
@@ -437,70 +483,98 @@
                     body: `
                         <p>Violations follow the Project Disciplinary Matrix (EPC Option B):</p>
                         <table>
-                            <tr style="background:var(--mustard-yellow); color:black;"><th>Offense Level</th><th>Examples</th><th>Action</th></tr>
-                            <tr><td><b>Minor</b></td><td>Littering, Noise, Messy Room</td><td>Verbal Warning</td></tr>
-                            <tr><td><b>Major</b></td><td>Smoking in Room, Unauthorized Guests</td><td>Written Warning</td></tr>
-                            <tr><td><b>Critical</b></td><td>Alcohol, Drugs, Fighting, Theft</td><td class="highlight-red">PERMANENT BAN</td></tr>
+                            <tr style="background:var(--mustard-yellow);"><th>Level</th><th>Examples</th><th>Consequence</th></tr>
+                            <tr><td><b>Minor</b></td><td>Littering, Noise, Messy Room, Dress Code</td><td>Verbal Warning</td></tr>
+                            <tr><td><b>Major</b></td><td>Smoking in Room, Guests, Tampering AC/WiFi</td><td>Written Warning</td></tr>
+                            <tr><td><b>Critical</b></td><td>Alcohol, Drugs, Fighting, Theft, Harassment</td><td class="highlight-red">PERMANENT BAN</td></tr>
                         </table>
+                        <p style="font-size:0.8rem"><i>Note: JGC reserves right to bypass warnings for severe violations.</i></p>
                     `
                 },
                 {
                     type: "standard",
-                    title: "CONTACTS",
+                    title: "12.0 CONTACTS",
                     body: `
-                        <h3>Emergency Directory</h3>
+                        <h3>12.0 Camp Team Contacts</h3>
                         <ul>
-                            <li><b>Camp Manager:</b> Ext. 101</li>
-                            <li><b>Security Hotline:</b> Ext. 911</li>
-                            <li><b>Site Clinic:</b> Ext. 118</li>
-                            <li><b>JGC HSSE:</b> Ext. 112</li>
+                            <li><b>Call Center (Camp Office):</b> +62 811-1089-4447</li>
+                            <li><b>Mr. Deepak (JGC):</b> 0813 2288 259</li>
+                            <li><b>Mr. Mario K (JGC):</b> 0823 1678 5900</li>
                         </ul>
-                        <br><hr><br>
-                        <p style="text-align:center; font-style:italic;">Approved by JGC Project Management<br>Dec 2025</p>
-                        <div style="text-align:center; margin-top:20px;">
+                         <div class="qr-container">
+                            <div class="qr-box">
+                                <img src="https://i.imgur.com/czHvVds.png" alt="Call Center">
+                                <span>Camp<br>Call Center</span>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    type: "standard",
+                    title: "13.0 EMERGENCY (PAPA TANGO)",
+                    body: `
+                        <h3>13.0 Emergency Contacts</h3>
+                        <ul>
+                            <li><b>Papa Tango WhatsApp:</b> 0811 1705 0472</li>
+                            <li><b>Phone:</b> 021 3973 4666</li>
+                            <li><b>Internal Ext:</b> 4666</li>
+                            <li><b>Radio:</b> Channel 1 (PTP-PAPA-TANGO)</li>
+                        </ul>
+                        <div class="qr-container">
+                            <div class="qr-box">
+                                <img src="https://i.imgur.com/C97dcCY.png" alt="Papa Tango">
+                                <span>Emergency<br>Papa Tango</span>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div style="text-align:center;">
+                            <p style="font-size:0.8rem; color:#aaa;">End of Document</p>
                             <button class="nav-btn btn-home" onclick="goToPage(0)">RETURN TO COVER</button>
                         </div>
                     `
                 }
             ],
+            // Keeping ID/JP summaries consistent with structure but focusing detail in English as requested
             id: [
-                 { type: "cover", title: "ATURAN KAMP", subtitle: "PEDOMAN FASILITAS (REV.0)", details: "Kontraktor: JGC | Operator: KGP" },
+                 { type: "cover", title: "ATURAN KAMP", subtitle: "REV.0 - DES 2025", details: "Kontraktor: JGC | Operator: KGP", extra: `<div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span>Aturan<br>Lengkap</span></div></div>` },
                  { type: "toc", title: "DAFTAR ISI" },
-                 { type: "standard", title: "1.0 TUJUAN & LINGKUP", body: `<h3>1.1 Tujuan</h3><p>Menetapkan aturan wajib untuk operasi yang aman, higienis, dan hormat di kamp JGC sesuai standar BP HSSE.</p><h3>1.2 Lingkup</h3><p>Berlaku untuk semua penghuni: Karyawan JGC, Subkontraktor, dan Vendor.</p>` },
-                 { type: "standard", title: "2.0 ORGANISASI", body: `<p><b>JGC:</b> Otoritas Utama.<br><b>KGP:</b> Operator Harian (Katering, Kebersihan).</p>` },
-                 { type: "standard", title: "3.0 KEDATANGAN", body: `<h3>3.1 Check-In</h3><p>Wajib menunjukkan Badge dan Surat Jalan. Lapor kerusakan kamar dalam 2 jam.</p><h3>3.3 Check-Out</h3><p>Kembalikan kunci dan linen. Kerusakan akan dibebankan.</p>` },
-                 { type: "standard", title: "4.0 FASILITAS UMUM", body: `<h3>4.1 Rekreasi</h3><p>Dilarang tidur/makan di dalam.</p><h3>4.3 Wi-Fi</h3><p>Streaming dibatasi saat jam sibuk (19:00-22:00).</p>` },
-                 { type: "standard", title: "5.0 ATURAN KAMAR (1)", body: `<h3>5.1 Standar</h3><p>AC 24°C. Matikan lampu saat keluar.</p>` },
-                 { type: "standard", title: "5.0 ATURAN KAMAR (2)", body: `<div class="box-warning"><b>DILARANG KERAS:</b><br>- Memasak (Rice cooker)<br>- Merokok di kamar<br>- Alkohol / Narkoba<br>- Tamu lawan jenis</div>` },
-                 { type: "standard", title: "6.0 LAYANAN", body: `<h3>6.1 Housekeeping</h3><p>08:00–17:00. Gunakan tag "Jangan Ganggu" untuk shift malam.</p><h3>6.3 Perbaikan</h3><p>Jangan perbaiki sendiri. Lapor ke resepsionis.</p>` },
-                 { type: "standard", title: "7.0 MAKAN (MESS HALL)", body: `<p>Cuci tangan wajib. Berpakaian sopan.</p><div class="box-warning"><b>DILARANG MEMBAWA MAKANAN KELUAR.</b></div>` },
-                 { type: "standard", title: "8.0 HSSE & KEAMANAN", body: `<h3>8.2 Darurat</h3><p>Alarm Kebakaran = Ke Muster Point.<br>Gempa = Drop, Cover, Hold.</p><p class="highlight-red">Merusak Detektor Asap = PHK.</p>` },
-                 { type: "standard", title: "10.0 SOSIAL & BUDAYA", body: `<h3>10.1 Hormati Warga Lokal</h3><p>Hormati adat Papua. Dilarang berkata kasar.</p>` },
-                 { type: "standard", title: "11.0 DISIPLIN", body: `<table><tr><th>Level</th><th>Sanksi</th></tr><tr><td>Minor</td><td>Teguran Lisan</td></tr><tr><td>Major</td><td>Surat Peringatan</td></tr><tr><td>Critical</td><td>BAN PERMANEN</td></tr></table>` },
-                 { type: "standard", title: "KONTAK", body: `<p><b>Security:</b> 911<br><b>Klinik:</b> 118</p><button class="nav-btn btn-home" onclick="goToPage(0)">KEMBALI KE DEPAN</button>` }
+                 { type: "standard", title: "1.0 TUJUAN & LINGKUP", body: `<h3>1.1 Tujuan</h3><p>Operasi aman, higienis, dan hormat sesuai standar BP HSSE.</p>` },
+                 { type: "standard", title: "2.0 GAMBARAN PROYEK", body: `<p>Proyek Tangguh LNG beroperasi di lingkungan keamanan tinggi.</p>` },
+                 { type: "standard", title: "3.0 KEDATANGAN", body: `<h3>3.1 Check-In</h3><p>Tunjukkan Badge. Lapor kerusakan dalam 2 jam.</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/ivsPL5x.png"><span>Video<br>Induksi</span></div></div>` },
+                 { type: "standard", title: "4.0 FASILITAS UMUM", body: `<h3>4.4 Wi-Fi</h3><p><b>SSID:</b> Kasuari<br><b>Pass:</b> oneteamtannguh</p>` },
+                 { type: "standard", title: "5.0 ATURAN KAMAR", body: `<div class="box-warning"><b>DILARANG:</b> Masak, Merokok di kamar, Alkohol, Tamu lawan jenis.</div>` },
+                 { type: "standard", title: "6.0 LAYANAN", body: `<h3>6.2 Laundry</h3><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/bmzixgK.png"><span>Panduan</span></div><div class="qr-box"><img src="https://i.imgur.com/q0bAdpw.png"><span>App Laundry</span></div></div>` },
+                 { type: "standard", title: "7.0 MAKAN", body: `<p>Cuci tangan. Dilarang bawa makanan keluar.</p>` },
+                 { type: "standard", title: "8.0 HSSE", body: `<p>Alarm Kebakaran = Muster Point. Merusak Smoke Detector = PHK.</p>` },
+                 { type: "standard", title: "9.0 TRANSPORT", body: `<p>Kecepatan Maks: 10 km/h. Parkir mundur.</p>` },
+                 { type: "standard", title: "10.0 SOSIAL", body: `<p>Hormati budaya Papua. Dilarang foto tanpa izin.</p>` },
+                 { type: "standard", title: "11.0 DISIPLIN", body: `<table><tr><th>Level</th><th>Sanksi</th></tr><tr><td>Minor</td><td>Teguran</td></tr><tr><td>Critical</td><td>BAN PERMANEN</td></tr></table>` },
+                 { type: "standard", title: "12.0 KONTAK", body: `<ul><li><b>Mr. Deepak:</b> 0813 2288 259</li><li><b>Call Center:</b> +62 811-1089-4447</li></ul><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/czHvVds.png"><span>Call Center</span></div></div>` },
+                 { type: "standard", title: "13.0 DARURAT", body: `<h3>Papa Tango</h3><p><b>WA:</b> 0811 1705 0472<br><b>Radio:</b> Ch 1</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/C97dcCY.png"><span>Darurat</span></div></div><div style="text-align:center;"><button class="nav-btn btn-home" onclick="goToPage(0)">KEMBALI KE DEPAN</button></div>` }
             ],
             jp: [
-                 { type: "cover", title: "キャンプ規則", subtitle: "施設利用ガイドライン (REV.0)", details: "メイン請負業者: JGC | 運営: KGP" },
+                 { type: "cover", title: "キャンプ規則", subtitle: "REV.0 - 2025年12月", details: "JGC運営 | KGP管理", extra: `<div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span>完全な<br>ルール</span></div></div>` },
                  { type: "toc", title: "目次" },
-                 { type: "standard", title: "1.0 目的と範囲", body: `<h3>1.1 目的</h3><p>BP HSSE基準に準拠した安全で衛生的な運営を確立する。</p>` },
-                 { type: "standard", title: "2.0 組織", body: `<p>JGCが管理し、KGPが日常業務（清掃、食事）を行う。</p>` },
-                 { type: "standard", title: "3.0 到着と出発", body: `<h3>3.1 チェックイン</h3><p>IDバッジ必須。部屋の不具合は2時間以内に報告すること。</p>` },
-                 { type: "standard", title: "4.0 公共施設", body: `<h3>4.1 レクリエーション</h3><p>飲食・睡眠禁止。</p><h3>4.3 Wi-Fi</h3><p>ピーク時のストリーミング制限あり。</p>` },
-                 { type: "standard", title: "5.0 部屋の規則 (1)", body: `<p>エアコンは24°Cに設定。外出時は消灯。</p>` },
-                 { type: "standard", title: "5.0 部屋の規則 (2)", body: `<div class="box-warning"><b>厳禁事項:</b><br>- 調理 (炊飯器不可)<br>- 室内喫煙<br>- アルコール/薬物<br>- 異性の入室</div>` },
-                 { type: "standard", title: "6.0 サービス", body: `<p>清掃: 08:00–17:00。修理は自分でせず、フロントへ報告。</p>` },
-                 { type: "standard", title: "7.0 食堂", body: `<p>手洗い必須。作業着（汚れたもの）不可。</p><div class="box-warning"><b>持ち出し禁止。</b></div>` },
-                 { type: "standard", title: "8.0 HSSE & セキュリティ", body: `<p>火災時: 集合場所へ。<br>煙探知機の改造: 即時解雇。</p>` },
-                 { type: "standard", title: "10.0 社会と文化", body: `<p>パプアの文化を尊重すること。</p>` },
-                 { type: "standard", title: "11.0 懲戒処分", body: `<table><tr><th>レベル</th><th>処分</th></tr><tr><td>軽微</td><td>口頭注意</td></tr><tr><td>重大</td><td>書面警告</td></tr><tr><td>危険</td><td>永久追放</td></tr></table>` },
-                 { type: "standard", title: "連絡先", body: `<p><b>セキュリティ:</b> 911<br><b>クリニック:</b> 118</p><button class="nav-btn btn-home" onclick="goToPage(0)">表紙に戻る</button>` }
+                 { type: "standard", title: "1.0 目的", body: `<p>BP HSSE基準に準拠した安全な運営。</p>` },
+                 { type: "standard", title: "2.0 プロジェクト概要", body: `<p>Tangguh LNGプロジェクトは高セキュリティ環境で運営されています。</p>` },
+                 { type: "standard", title: "3.0 到着", body: `<p>バッジ提示。不具合報告は2時間以内。</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/ivsPL5x.png"><span>導入<br>ビデオ</span></div></div>` },
+                 { type: "standard", title: "4.0 Wi-Fi", body: `<p><b>SSID:</b> Kasuari<br><b>Pass:</b> oneteamtannguh</p>` },
+                 { type: "standard", title: "5.0 部屋規則", body: `<div class="box-warning"><b>厳禁:</b> 調理、室内喫煙、アルコール、異性入室。</div>` },
+                 { type: "standard", title: "6.0 サービス", body: `<h3>6.2 ランドリー</h3><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/bmzixgK.png"><span>ガイド</span></div><div class="qr-box"><img src="https://i.imgur.com/q0bAdpw.png"><span>アプリ</span></div></div>` },
+                 { type: "standard", title: "7.0 食堂", body: `<p>持ち出し禁止。手洗い必須。</p>` },
+                 { type: "standard", title: "8.0 安全", body: `<p>煙探知機改造 = 解雇。</p>` },
+                 { type: "standard", title: "9.0 輸送", body: `<p>最高速度: 10 km/h。バック駐車。</p>` },
+                 { type: "standard", title: "10.0 文化", body: `<p>パプア文化尊重。無断撮影禁止。</p>` },
+                 { type: "standard", title: "11.0 懲戒", body: `<table><tr><th>レベル</th><th>処分</th></tr><tr><td>軽微</td><td>警告</td></tr><tr><td>危険</td><td>永久追放</td></tr></table>` },
+                 { type: "standard", title: "12.0 連絡先", body: `<ul><li><b>Deepak氏:</b> 0813 2288 259</li><li><b>コールセンター:</b> +62 811-1089-4447</li></ul>` },
+                 { type: "standard", title: "13.0 緊急時", body: `<h3>Papa Tango</h3><p><b>WA:</b> 0811 1705 0472</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/C97dcCY.png"><span>緊急連絡</span></div></div><div style="text-align:center;"><button class="nav-btn btn-home" onclick="goToPage(0)">表紙に戻る</button></div>` }
             ]
         };
 
         const uiText = {
-            en: { footer: "SAFETY FIRST • ZERO INCIDENTS • COMPLY WITH ANNEX-1 • RESPECT LOCAL CULTURE • REPORT UNSAFE ACTS • EMERGENCY: 123-456", next: "Next >", prev: "< Prev", home: "Home", pg: "Pg" },
-            id: { footer: "UTAMAKAN KESELAMATAN • JAGA KEBERSIHAN • HORMATI BUDAYA PAPUA • LAPORKAN BAHAYA • DARURAT: 123-456", next: "Lanjut >", prev: "< Balik", home: "Beranda", pg: "Hal" },
-            jp: { footer: "安全第一 • ゼロ災害 • 地域の文化を尊重 • 不安全行動を報告 • 緊急連絡先: 123-456", next: "次へ >", prev: "< 前へ", home: "ホーム", pg: "P" }
+            en: { footer: "EMERGENCY PAPA TANGO: 0811 1705 0472 • CALL CENTER: +62 811-1089-4447 • SAFETY FIRST • RESPECT LOCAL CULTURE • REPORT UNSAFE ACTS", next: "Next >", prev: "< Prev", home: "Home", pg: "Pg" },
+            id: { footer: "DARURAT PAPA TANGO: 0811 1705 0472 • CALL CENTER: +62 811-1089-4447 • UTAMAKAN KESELAMATAN • HORMATI BUDAYA LOKAL", next: "Lanjut >", prev: "< Balik", home: "Beranda", pg: "Hal" },
+            jp: { footer: "緊急連絡 PAPA TANGO: 0811 1705 0472 • コールセンター: +62 811-1089-4447 • 安全第一 • 文化を尊重", next: "次へ >", prev: "< 前へ", home: "ホーム", pg: "P" }
         };
 
         let currentLang = 'en';
@@ -513,24 +587,16 @@
 
         function setLang(lang) {
             currentLang = lang;
-            
-            // Update UI Buttons
-            // FIXED: Using ID selector instead of event.target to prevent errors on init()
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             const activeBtn = document.getElementById(`btn-${lang}`);
             if (activeBtn) activeBtn.classList.add('active');
-
-            // Update Footer
             document.getElementById('footer-text').innerText = uiText[lang].footer;
-
-            // Re-render Book
             renderBook();
         }
 
         function renderBook() {
             const book = document.getElementById('book');
-            book.innerHTML = ''; // Clear
-            
+            book.innerHTML = ''; 
             const data = content[currentLang];
             totalPages = data.length;
 
@@ -538,13 +604,12 @@
                 const pageEl = document.createElement('div');
                 pageEl.className = 'page';
                 pageEl.id = `page-${index}`;
-                pageEl.style.zIndex = totalPages - index; // Stack order
+                pageEl.style.zIndex = totalPages - index;
 
                 if (index < currentPage) pageEl.classList.add('flipped');
 
                 let innerHTML = '';
 
-                // --- COVER ---
                 if (pageData.type === 'cover') {
                     innerHTML = `
                         <div class="page-content cover-page">
@@ -554,16 +619,15 @@
                             <div class="doc-control">
                                 <p>${pageData.details}</p>
                             </div>
-                            <br><br>
+                            ${pageData.extra || ''}
+                            <br>
                             <button class="nav-btn btn-home" onclick="nextPage()">OPEN DOCUMENT</button>
                         </div>
                     `;
-                } 
-                // --- TOC ---
-                else if (pageData.type === 'toc') {
+                } else if (pageData.type === 'toc') {
                     let list = '';
                     data.forEach((p, i) => {
-                        if (i > 1) { // Skip cover and TOC
+                        if (i > 1) { 
                              list += `<li style="border-bottom:1px dashed #ccc; padding:5px 0; display:flex; justify-content:space-between; cursor:pointer;" onclick="goToPage(${i})">
                                         <span>${p.title}</span> <b>${i+1}</b>
                                       </li>`;
@@ -576,9 +640,7 @@
                             ${getNavHTML(index)}
                         </div>
                     `;
-                } 
-                // --- STANDARD PAGE ---
-                else {
+                } else {
                     innerHTML = `
                         <div class="page-content">
                             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--mustard-yellow); margin-bottom:20px;">
@@ -597,19 +659,23 @@
 
         function getNavHTML(index) {
             const ui = uiText[currentLang];
+            const isLastPage = index === totalPages - 1;
+            
+            // Logic to hide Next button on last page
+            const nextBtnClass = isLastPage ? 'nav-btn btn-disabled' : 'nav-btn';
+
             return `
                 <div class="page-footer-nav">
                     <button class="nav-btn btn-home" onclick="goToPage(0)">${ui.home}</button>
                     <span class="pg-num">${ui.pg} ${index+1}</span>
                     <div style="display:flex; gap:10px;">
                         <button class="nav-btn" onclick="prevPage()">${ui.prev}</button>
-                        <button class="nav-btn" onclick="nextPage()">${ui.next}</button>
+                        <button class="${nextBtnClass}" onclick="nextPage()">${ui.next}</button>
                     </div>
                 </div>
             `;
         }
 
-        // --- NAVIGATION ACTIONS ---
         function nextPage() {
             if (currentPage < totalPages) {
                 document.getElementById(`page-${currentPage}`).classList.add('flipped');
@@ -629,9 +695,7 @@
             while(currentPage > target) prevPage();
         }
 
-        // Initialize
         window.onload = init;
-
     </script>
 </body>
 </html>
