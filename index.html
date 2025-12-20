@@ -163,7 +163,8 @@
         
         .highlight-red { color: var(--bright-red); font-weight: bold; }
         .box-warning { border: 2px solid var(--bright-red); background: #fff0f0; padding: 15px; margin: 15px 0; border-radius: 4px; }
-        
+        .box-info { border: 2px solid #ccc; background: #eee; padding: 15px; margin: 15px 0; border-radius: 4px; }
+
         table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.85rem; }
         th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
         th { background-color: var(--black); color: var(--white); }
@@ -369,6 +370,19 @@
                 },
                 {
                     type: "standard",
+                    title: "NEC CAMP MAP",
+                    body: `
+                        <h3>Camp Layout</h3>
+                        <div style="text-align:center;">
+                            <img src="https://i.imgur.com/zclIh3R.png" alt="NEC Camp Map" style="width:100%; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                            <br>
+                            <a href="https://i.imgur.com/zclIh3R.png" target="_blank" style="display:inline-block; background:var(--black); color:white; padding:10px 20px; text-decoration:none; border-radius:4px; font-weight:bold; border: 1px solid var(--mustard-yellow);">🔎 ZOOM / DOWNLOAD MAP</a>
+                        </div>
+                        <p style="margin-top:15px; text-align:center;">Refer to this map for key locations including Muster Points, Mess Hall, and Clinic.</p>
+                    `
+                },
+                {
+                    type: "standard",
                     title: "4.0 PUBLIC FACILITIES",
                     body: `
                         <h3>4.1 Recreation Hall</h3>
@@ -380,7 +394,7 @@
                         <h3>4.4 Wi-Fi & IT Usage</h3>
                         <div style="background:#eee; padding:10px; border-left:5px solid var(--parrot-green); margin:10px 0;">
                             <b>Wi-Fi Name:</b> Kasuari<br>
-                            <b>Password:</b> oneteamtannguh
+                            <b>Password:</b> oneteamtangguh
                         </div>
                         <p>Excessive downloading and HD streaming are restricted during <b>Peak Hours (19:00–22:00)</b>. No illegal or pornographic content.</p>
                     `
@@ -425,6 +439,11 @@
                                 <img src="https://i.imgur.com/q0bAdpw.png" alt="Laundry App">
                                 <span>Laundry<br>Mobile App</span>
                             </div>
+                        </div>
+                        <div class="box-info" style="border-color:var(--bright-red); background:#fff5f5;">
+                            <p style="color:red; font-size:0.85rem; margin:0;">
+                                <b>NOTE:</b> The laundry application QR code is currently not operational due to safety concerns. Residents will be duly informed once the application is officially live on the Google Play Store and iOS App Store.
+                            </p>
                         </div>
                         <h3>6.3 Maintenance</h3>
                         <p>Do not attempt self-repairs. Report faults immediately to Reception or via the QR Code system.</p>
@@ -541,9 +560,10 @@
                  { type: "standard", title: "1.0 TUJUAN & LINGKUP", body: `<h3>1.1 Tujuan</h3><p>Operasi aman, higienis, dan hormat sesuai standar BP HSSE.</p>` },
                  { type: "standard", title: "2.0 GAMBARAN PROYEK", body: `<p>Proyek Tangguh LNG beroperasi di lingkungan keamanan tinggi.</p>` },
                  { type: "standard", title: "3.0 KEDATANGAN", body: `<h3>3.1 Check-In</h3><p>Tunjukkan Badge. Lapor kerusakan dalam 2 jam.</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/ivsPL5x.png"><span>Video<br>Induksi</span></div></div>` },
-                 { type: "standard", title: "4.0 FASILITAS UMUM", body: `<h3>4.4 Wi-Fi</h3><p><b>SSID:</b> Kasuari<br><b>Pass:</b> oneteamtannguh</p>` },
+                 { type: "standard", title: "PETA KAMP NEC", body: `<h3>Peta Lokasi</h3><div style="text-align:center;"><img src="https://i.imgur.com/zclIh3R.png" style="width:100%;"><br><a href="https://i.imgur.com/zclIh3R.png" target="_blank" style="display:inline-block;background:black;color:white;padding:10px;margin-top:5px;border-radius:4px;text-decoration:none;">🔍 ZOOM / UNDUH</a></div>` },
+                 { type: "standard", title: "4.0 FASILITAS UMUM", body: `<h3>4.4 Wi-Fi</h3><p><b>SSID:</b> Kasuari<br><b>Pass:</b> oneteamtangguh</p>` },
                  { type: "standard", title: "5.0 ATURAN KAMAR", body: `<div class="box-warning"><b>DILARANG:</b> Masak, Merokok di kamar, Alkohol, Tamu lawan jenis.</div>` },
-                 { type: "standard", title: "6.0 LAYANAN", body: `<h3>6.2 Laundry</h3><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/bmzixgK.png"><span>Panduan</span></div><div class="qr-box"><img src="https://i.imgur.com/q0bAdpw.png"><span>App Laundry</span></div></div>` },
+                 { type: "standard", title: "6.0 LAYANAN", body: `<h3>6.2 Laundry</h3><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/bmzixgK.png"><span>Panduan</span></div><div class="qr-box"><img src="https://i.imgur.com/q0bAdpw.png"><span>App Laundry</span></div></div><p style="color:red;font-size:0.8rem;"><b>PERHATIAN:</b> Kode QR Aplikasi Laundry saat ini belum beroperasi demi alasan keamanan.</p>` },
                  { type: "standard", title: "7.0 MAKAN", body: `<p>Cuci tangan. Dilarang bawa makanan keluar.</p>` },
                  { type: "standard", title: "8.0 HSSE", body: `<p>Alarm Kebakaran = Muster Point. Merusak Smoke Detector = PHK.</p>` },
                  { type: "standard", title: "9.0 TRANSPORT", body: `<p>Kecepatan Maks: 10 km/h. Parkir mundur.</p>` },
@@ -558,9 +578,10 @@
                  { type: "standard", title: "1.0 目的", body: `<p>BP HSSE基準に準拠した安全な運営。</p>` },
                  { type: "standard", title: "2.0 プロジェクト概要", body: `<p>Tangguh LNGプロジェクトは高セキュリティ環境で運営されています。</p>` },
                  { type: "standard", title: "3.0 到着", body: `<p>バッジ提示。不具合報告は2時間以内。</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/ivsPL5x.png"><span>導入<br>ビデオ</span></div></div>` },
-                 { type: "standard", title: "4.0 Wi-Fi", body: `<p><b>SSID:</b> Kasuari<br><b>Pass:</b> oneteamtannguh</p>` },
+                 { type: "standard", title: "NECキャンプマップ", body: `<h3>キャンプ配置図</h3><div style="text-align:center;"><img src="https://i.imgur.com/zclIh3R.png" style="width:100%;"><br><a href="https://i.imgur.com/zclIh3R.png" target="_blank" style="display:inline-block;background:black;color:white;padding:10px;margin-top:5px;border-radius:4px;text-decoration:none;">🔍 拡大 / ダウンロード</a></div>` },
+                 { type: "standard", title: "4.0 Wi-Fi", body: `<p><b>SSID:</b> Kasuari<br><b>Pass:</b> oneteamtangguh</p>` },
                  { type: "standard", title: "5.0 部屋規則", body: `<div class="box-warning"><b>厳禁:</b> 調理、室内喫煙、アルコール、異性入室。</div>` },
-                 { type: "standard", title: "6.0 サービス", body: `<h3>6.2 ランドリー</h3><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/bmzixgK.png"><span>ガイド</span></div><div class="qr-box"><img src="https://i.imgur.com/q0bAdpw.png"><span>アプリ</span></div></div>` },
+                 { type: "standard", title: "6.0 サービス", body: `<h3>6.2 ランドリー</h3><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/bmzixgK.png"><span>ガイド</span></div><div class="qr-box"><img src="https://i.imgur.com/q0bAdpw.png"><span>アプリ</span></div></div><p style="color:red;font-size:0.8rem;"><b>注意:</b> 安全上の理由により、ランドリーアプリのQRコードは現在使用できません。</p>` },
                  { type: "standard", title: "7.0 食堂", body: `<p>持ち出し禁止。手洗い必須。</p>` },
                  { type: "standard", title: "8.0 安全", body: `<p>煙探知機改造 = 解雇。</p>` },
                  { type: "standard", title: "9.0 輸送", body: `<p>最高速度: 10 km/h。バック駐車。</p>` },
