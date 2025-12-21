@@ -175,6 +175,28 @@
         .qr-box img { width: 100px; height: 100px; border: 1px solid #ccc; padding: 2px; }
         .qr-box span { display: block; font-size: 0.75rem; margin-top: 5px; font-weight: bold; color: var(--black); max-width: 100px; }
 
+        /* Media Buttons */
+        .media-btn {
+            display: block;
+            width: 100%;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 5px 0;
+            text-align: left;
+            text-decoration: none;
+            color: #333;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .media-btn:hover { background: var(--mustard-yellow); color: black; border-color: #aaa; }
+        .media-icon { font-size: 1.2rem; }
+
         /* --- COVER PAGE SPECIFIC --- */
         .cover-page {
             display: flex;
@@ -190,6 +212,17 @@
         .cover-title { font-size: 2.2rem; color: var(--white); margin-bottom: 10px; font-weight: 900; }
         .cover-subtitle { font-size: 1.1rem; color: var(--mustard-yellow); margin-bottom: 30px; letter-spacing: 1px; }
         .doc-control { border-top: 1px solid #666; padding-top: 20px; font-size: 0.7rem; color: #aaa; width: 100%; text-align: center; line-height: 1.4; }
+        
+        /* Updated per user request: Yellow Background, Black Text */
+        .qr-highlight-box {
+            background-color: var(--mustard-yellow);
+            color: var(--black);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
 
         /* --- NAVIGATION --- */
         .page-footer-nav {
@@ -280,6 +313,11 @@
     </footer>
 
     <script>
+        function getCurrentDate() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date().toLocaleDateString('en-US', options);
+        }
+
         const content = {
             en: [
                 {
@@ -287,7 +325,7 @@
                     title: "CAMP RULES",
                     subtitle: "FACILITY USER GUIDELINES (REV.0)",
                     details: `
-                        <b>Doc No:</b> JGC-UCC-CAMP-SOP-001 | <b>Date:</b> 12-Dec-2025<br>
+                        <b>Doc No:</b> JGC-UCC-CAMP-SOP-001 | <b>Date:</b> <span id="current-date">${getCurrentDate()}</span><br>
                         <b>Contractor:</b> JGC INDONESIA | <b>Operator:</b> PT KGP | <b>Client:</b> BP BERAU LTD<br>
                         Prepared By: Deepak Sharma | Reviewed By: Ryota Kikuchi & Adhi Sumarhadi
                     `,
@@ -295,7 +333,7 @@
                         <div class="qr-container">
                             <div class="qr-box">
                                 <img src="https://i.imgur.com/AX4mx36.png" alt="Rules">
-                                <span>Scan for<br>Full Rules</span>
+                                <span class="qr-highlight-box">Scan for Full Rules</span>
                             </div>
                         </div>
                     `
@@ -349,7 +387,18 @@
                     title: "3.0 ARRIVAL & DEPARTURE",
                     body: `
                         <h3>3.1 Check-In (Arrival)</h3>
-                        <p>All personnel must present a Valid Site ID (Badge), Approved Movement Order, and Medical Clearance. Residents will receive a Room Key (or Card), Bed Linen Set, and Laundry Bag. A mandatory brief on Camp Rules will be conducted.</p>
+                        <p>All personnel must present a Valid Site ID (Badge), Approved Movement Order, and Medical Clearance. Residents will receive a Room Key (or Card), Bed Linen Set, and Laundry Bag.</p>
+                        
+                        <div style="background:#f9f9f9; padding:15px; border-radius:5px; margin:15px 0; border:1px solid #eee;">
+                            <h4 style="margin-top:0;">🔊 Orientation & Rules Audio/Video</h4>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                                <a href="https://1drv.ms/f/c/914d6cd9be74140f/IgC2PTQaiG13Sq8obcAkBuGQAVRtjc2Y_XzhN2rdKv46Kn0" target="_blank" class="media-btn"><span class="media-icon">📺</span> Orientation Video (Eng)</a>
+                                <a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBuq6Qd_zq-TqnGq4Z-mMTVAQbe4j1g40TpglkwAv0n49g?e=vN1fqS" target="_blank" class="media-btn"><span class="media-icon">📺</span> Orientation Video (Ind)</a>
+                                <a href="https://1drv.ms/u/c/914d6cd9be74140f/IQAz5kwWQ2imTZ7S0GU0UBJAAWHvqQfogkCslZ4NuMck0mc?e=8OLArh" target="_blank" class="media-btn"><span class="media-icon">🎧</span> Rules Audio (Eng)</a>
+                                <a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCgF89THYByT4O2JroKJgn9AeE1AmEjgPbqpH4jZfYE1mQ?e=LXKUIT" target="_blank" class="media-btn"><span class="media-icon">🎧</span> Rules Audio (Ind)</a>
+                            </div>
+                        </div>
+
                          <div class="qr-container">
                             <div class="qr-box">
                                 <img src="https://i.imgur.com/ivsPL5x.png" alt="Induction Video">
@@ -378,7 +427,7 @@
                             <br>
                             <a href="https://i.imgur.com/DBHITAd.png" target="_blank" style="display:inline-block; background:var(--black); color:white; padding:10px 20px; text-decoration:none; border-radius:4px; font-weight:bold; border: 1px solid var(--mustard-yellow);">🔎 ZOOM MAP</a>
                         </div>
-                        <p style="margin-top:15px; text-align:center;">Refer to this map for key locations including Muster Points, Mess Hall, and facilities.</p>
+                        <p style="margin-top:15px; text-align:center;">Refer to this map for key locations including Muster Points, Mess Hall, and Clinic.</p>
                     `
                 },
                 {
@@ -501,6 +550,10 @@
                     title: "UCC SITE CULTURE",
                     body: `
                         <div style="font-size: 0.85rem;">
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCU3GdfvLyzRLmfyYyKbtKxAY3_suoHSAuKgqm4BEH9fqY?e=I3bds3" target="_blank" class="media-btn" style="background:#e8f5e9; border-color:#32CD32;"><span class="media-icon">🎧</span> Listen to UCC Site Culture Audio</a>
+                            </div>
+
                             <div style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                                 <h4 style="color:var(--parrot-green); margin-bottom:5px;">1) Workplace Free from Bullying & Harassment</h4>
                                 <div style="display:flex; gap:10px; align-items:flex-start;">
@@ -525,10 +578,7 @@
                         </div>
                     `
                 },
-                {
-                    type: "standard",
-                    title: "11.0 DISCIPLINARY MATRIX",
-                    body: `
+                 { type: "standard", title: "11.0 DISCIPLINARY MATRIX", body: `
                         <p>Violations follow the Project Disciplinary Matrix (EPC Option B):</p>
                         <table>
                             <tr style="background:var(--mustard-yellow);"><th>Level</th><th>Examples</th><th>Consequence</th></tr>
@@ -537,12 +587,8 @@
                             <tr><td><b>Critical</b></td><td>Alcohol, Drugs, Fighting, Theft, Harassment</td><td class="highlight-red">PERMANENT BAN</td></tr>
                         </table>
                         <p style="font-size:0.8rem"><i>Note: JGC reserves right to bypass warnings for severe violations.</i></p>
-                    `
-                },
-                {
-                    type: "standard",
-                    title: "12.0 CONTACTS",
-                    body: `
+                    ` },
+                 { type: "standard", title: "12.0 CONTACTS", body: `
                         <h3>12.0 Camp Team Contacts</h3>
                         <ul>
                             <li><b>Call Center (Camp Office):</b> +62 811-1089-4447</li>
@@ -555,12 +601,8 @@
                                 <span>Camp<br>Call Center</span>
                             </div>
                         </div>
-                    `
-                },
-                {
-                    type: "standard",
-                    title: "13.0 EMERGENCY (PAPA TANGO)",
-                    body: `
+                    ` },
+                 { type: "standard", title: "13.0 EMERGENCY (PAPA TANGO)", body: `
                         <h3>13.0 Emergency Contacts</h3>
                         <ul>
                             <li><b>Papa Tango WhatsApp:</b> 0811 1705 0472</li>
@@ -579,12 +621,11 @@
                             <p style="font-size:0.8rem; color:#aaa;">End of Document</p>
                             <button class="nav-btn btn-home" onclick="goToPage(0)">RETURN TO COVER</button>
                         </div>
-                    `
-                }
+                    ` }
             ],
             // Keeping ID/JP summaries consistent with structure but focusing detail in English as requested
             id: [
-                 { type: "cover", title: "ATURAN KAMP", subtitle: "REV.0 - DES 2025", details: "Kontraktor: JGC | Operator: KGP", extra: `<div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span>Aturan<br>Lengkap</span></div></div>` },
+                 { type: "cover", title: "ATURAN KAMP", subtitle: "REV.0 - DES 2025", details: "Kontraktor: JGC | Operator: KGP", extra: `<div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span class="qr-highlight-box">Aturan Lengkap</span></div></div>` },
                  { type: "toc", title: "DAFTAR ISI" },
                  { type: "standard", title: "1.0 TUJUAN & LINGKUP", body: `<h3>1.1 Tujuan</h3><p>Operasi aman, higienis, dan hormat sesuai standar BP HSSE.</p>` },
                  { type: "standard", title: "2.0 GAMBARAN PROYEK", body: `<p>Proyek Tangguh LNG beroperasi di lingkungan keamanan tinggi.</p>` },
@@ -602,6 +643,9 @@
                     title: "BUDAYA SITUS UCC",
                     body: `
                         <div style="font-size: 0.85rem;">
+                             <div style="margin-bottom: 10px; text-align: center;">
+                                <a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCU3GdfvLyzRLmfyYyKbtKxAY3_suoHSAuKgqm4BEH9fqY?e=I3bds3" target="_blank" class="media-btn" style="background:#e8f5e9; border-color:#32CD32;"><span class="media-icon">🎧</span> Listen to UCC Site Culture Audio</a>
+                            </div>
                             <div style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                                 <h4 style="color:var(--parrot-green); margin-bottom:5px;">1) Workplace Free from Bullying & Harassment</h4>
                                 <div style="display:flex; gap:10px; align-items:flex-start;">
@@ -631,7 +675,7 @@
                  { type: "standard", title: "13.0 DARURAT", body: `<h3>Papa Tango</h3><p><b>WA:</b> 0811 1705 0472<br><b>Radio:</b> Ch 1</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/C97dcCY.png"><span>Darurat</span></div></div><div style="text-align:center;"><button class="nav-btn btn-home" onclick="goToPage(0)">KEMBALI KE DEPAN</button></div>` }
             ],
             jp: [
-                 { type: "cover", title: "キャンプ規則", subtitle: "REV.0 - 2025年12月", details: "JGC運営 | KGP管理", extra: `<div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span>完全な<br>ルール</span></div></div>` },
+                 { type: "cover", title: "キャンプ規則", subtitle: "REV.0 - 2025年12月", details: "JGC運営 | KGP管理", extra: `<div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span class="qr-highlight-box">完全なルール</span></div></div>` },
                  { type: "toc", title: "目次" },
                  { type: "standard", title: "1.0 目的", body: `<p>BP HSSE基準に準拠した安全な運営。</p>` },
                  { type: "standard", title: "2.0 プロジェクト概要", body: `<p>Tangguh LNGプロジェクトは高セキュリティ環境で運営されています。</p>` },
@@ -649,6 +693,9 @@
                     title: "UCCサイト文化",
                     body: `
                         <div style="font-size: 0.85rem;">
+                            <div style="margin-bottom: 10px; text-align: center;">
+                                <a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCU3GdfvLyzRLmfyYyKbtKxAY3_suoHSAuKgqm4BEH9fqY?e=I3bds3" target="_blank" class="media-btn" style="background:#e8f5e9; border-color:#32CD32;"><span class="media-icon">🎧</span> Listen to UCC Site Culture Audio</a>
+                            </div>
                             <div style="margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                                 <h4 style="color:var(--parrot-green); margin-bottom:5px;">1) Workplace Free from Bullying & Harassment</h4>
                                 <div style="display:flex; gap:10px; align-items:flex-start;">
@@ -700,6 +747,10 @@
             if (activeBtn) activeBtn.classList.add('active');
             document.getElementById('footer-text').innerText = uiText[lang].footer;
             renderBook();
+            
+            // Re-update date after render if on cover page
+            const dateSpan = document.getElementById('current-date');
+            if(dateSpan) dateSpan.innerText = getCurrentDate();
         }
 
         function renderBook() {
