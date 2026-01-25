@@ -45,7 +45,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 3000px; /* Deep perspective for realism */
+            perspective: 2500px;
             overflow: hidden;
             background: radial-gradient(circle at center, #3a3a3a 0%, #151515 100%);
             position: relative;
@@ -56,7 +56,7 @@
             width: var(--page-width);
             height: var(--page-height);
             transform-style: preserve-3d;
-            transition: transform 0.3s ease-out;
+            transition: transform 0.2s ease-out;
         }
 
         /* --- SHEETS --- */
@@ -68,8 +68,7 @@
             height: 100%;
             transform-origin: left center;
             transform-style: preserve-3d;
-            /* Slower, smoother bezier for realistic paper weight */
-            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
             cursor: pointer;
         }
 
@@ -90,20 +89,17 @@
             border: 1px solid #ccc;
         }
 
-        /* Realistic Spine Shadows */
         .front {
             z-index: 2;
             border-radius: 0 5px 5px 0;
-            background: linear-gradient(to right, #d9d9d9 0%, #ffffff 5%, #ffffff 95%, #f0f0f0 100%);
-            box-shadow: inset 3px 0 10px rgba(0,0,0,0.05);
+            background: linear-gradient(to right, #e8e8e8 0%, #ffffff 5%);
         }
 
         .back {
             transform: rotateY(180deg);
             z-index: 1;
             border-radius: 5px 0 0 5px;
-            background: linear-gradient(to left, #d9d9d9 0%, #ffffff 5%, #ffffff 95%, #f0f0f0 100%);
-            box-shadow: inset -3px 0 10px rgba(0,0,0,0.05);
+            background: linear-gradient(to left, #e8e8e8 0%, #ffffff 5%);
         }
 
         /* --- CONTENT STYLING --- */
@@ -176,8 +172,8 @@
         /* QR & Links Grid */
         .grid-links {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns to keep items small */
+            gap: 8px;
             margin-bottom: 10px;
         }
         .qr-item {
@@ -187,17 +183,32 @@
             border-radius: 5px;
             background: #f9f9f9;
         }
-        .qr-item img { width: 60px; height: 60px; }
-        .qr-label { display: block; font-size: 0.65rem; font-weight: bold; margin-top: 3px; color: #333; }
+        /* Enforced small size for helpline QRs */
+        .qr-item img { 
+            width: 50px !important; 
+            height: 50px !important; 
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        .qr-label { 
+            display: block; 
+            font-size: 0.6rem; 
+            font-weight: bold; 
+            margin-top: 3px; 
+            color: #333; 
+            line-height: 1.1;
+        }
 
         /* Index Columns */
         .index-list {
-            column-count: 2;
+            column-count: 2 !important; /* Force 2 columns */
             column-gap: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem; /* Slightly smaller to fit */
             padding: 0;
             margin: 0;
             list-style: none;
+            width: 100%;
         }
         .index-list li {
             break-inside: avoid;
@@ -206,6 +217,7 @@
             border-bottom: 1px dotted #ccc;
             cursor: pointer;
             transition: color 0.2s;
+            line-height: 1.3;
         }
         .index-list li:hover { color: var(--parrot-green); font-weight: bold; background: #f9f9f9; }
 
@@ -308,7 +320,7 @@
             :root { --page-width: 90vw; --page-height: 80vh; }
             .book-stage { padding: 10px; }
             .page-content { padding: 15px; }
-            .index-list { column-count: 1; }
+            .grid-links { grid-template-columns: 1fr 1fr; } /* 2 cols on mobile for QRs */
         }
     </style>
 </head>
@@ -335,41 +347,49 @@
             return new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
+        // --- GREETING FUNCTION (Papua Time UTC+9) ---
+        function getPapuaGreeting() {
+            const date = new Date();
+            const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
+            const papuaTime = new Date(utc + (3600000 * 9));
+            const hour = papuaTime.getHours();
+            if (hour >= 5 && hour < 12) return "☀️ Good Morning";
+            if (hour >= 12 && hour < 17) return "🌤️ Good Afternoon";
+            if (hour >= 17 && hour < 21) return "🌇 Good Evening";
+            return "🌙 Good Night";
+        }
+
         // --- CONTENT DATA ---
-        // Note: Target sheets for Index Links are calculated based on Page 2 being Sheet 1 (Back), Page 3 being Sheet 2 (Front), etc.
-        // Index is at Back of Sheet 1. 
-        // 1. Emergency is Front of Sheet 2. Target: Sheet 2.
-        // 2. Drug is Back of Sheet 2. Target: Sheet 3.
-        
         const contentData = {
             en: [
                 {   // 0. COVER
                     type: "cover",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/cover%20image.png?raw=true",
                     title: "TANGGUH UCC PROJECT",
-                    subtitle: "JGC CAMP RULES & GUIDELINES (2026–2027)",
+                    subtitle: "CONTRACTOR CAMP RULES & GUIDELINES (2026–2027)",
                     body: `<div style="text-align:center; font-size:0.85rem;">
+                        <div style="color:var(--mustard-yellow); font-weight:bold; margin-bottom:5px; text-transform:uppercase;">${getPapuaGreeting()}</div>
                         <p style="text-align:center; margin-bottom:5px;"><b>Client:</b> BP Indonesia | <b>Contractor:</b> JGC</p>
-                        <p style="text-align:center; margin-bottom:5px;"><b>Camp Incharge:</b> Deepak Sharma</p>
+                        <p style="text-align:center; margin-bottom:5px;"><b>Created by:</b> Deepak Sharma</p>
                         <p style="text-align:center;"><b>Date:</b> ${getDate()}</p>
                         <div class="qr-container" style="margin: 10px 0;">
                             <div class="qr-box">
-                                <img src="https://i.imgur.com/AX4mx36.png" alt="Rules" style="width: 60px; height: 60px;">
-                                <span class="qr-text" style="background:var(--mustard-yellow); color:black; font-size:0.7rem; padding:2px 5px; border-radius:3px;">Scan Rules</span>
+                                <img src="https://i.imgur.com/AX4mx36.png" alt="Rules" style="width: 50px !important; height: 50px !important;">
+                                <span style="display:block; font-size:0.6rem; font-weight:bold; margin-top:3px;">Scan Rules</span>
                             </div>
                         </div>
                     </div>`
                 },
-                {   // 1. WELCOME (Back of Sheet 0)
+                {   // 1. WELCOME
                     title: "WELCOME MESSAGE",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/1.png?raw=true",
                     body: `<p>Welcome to the Tangguh UCC Contractor Camp. This camp is your home away from home. Our commitment is to provide a safe, disciplined, respectful, and comfortable environment for every resident.</p>
                     <p>These rules are made to protect:</p>
-                    <ul><li>✅ Safety</li><li>✅ Hygiene</li><li>✅ Community respect</li><li>✅ Smooth project operations</li></ul>
-                    <p>Your cooperation is essential. When everyone follows the same standard, the camp stays peaceful, services run smoothly, and we support the success of the Tangguh UCC Project together.</p>
-                    <p><b>One Team </b></p>`
+                    <ul><li>✅ Safety</li><li>✅ Hygiene</li><li>✅ Community respect</li><li>✅ Smooth operations</li></ul>
+                    <p>Your cooperation is essential. When everyone follows the same standard, the camp stays peaceful and services run smoothly.</p>
+                    <p><b>One Team UCC</b></p>`
                 },
-                {   // 2. HELPLINE (Front of Sheet 1)
+                {   // 2. HELPLINE & LINKS
                     title: "HELPLINE & IMPORTANT LINKS",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true",
                     body: `
@@ -379,16 +399,16 @@
                                 <li><b>Camp Maintenance:</b> +62 811-1089-4447</li>
                                 <li><b>Help Desk:</b> +62 811-1089-4447</li>
                                 <li><b>GDSK Incharge (Victor):</b> 0812 8222 0053</li>
-                                <li><b>JGC Camp Team (Deepak):</b> 0813 2288 259</li>
-                                <li><b>JGC Camp Team (Mario):</b> 0823 1678 5900</li>
+                                <li><b>JGC Manager (Deepak):</b> 0813 2288 259</li>
+                                <li><b>Camp Team (Mario):</b> 0823 1678 5900</li>
                             </ul>
                         </div>
                         <h3>🔗 Quick Access Guides</h3>
                         <div class="grid-links">
-                            <div class="qr-item"><a href="https://i.imgur.com/A7KbjKK.png" target="_blank"><img src="https://i.imgur.com/A7KbjKK.png"></a><span class="qr-label">Site Fam Guide</span></div>
-                            <div class="qr-item"><a href="https://i.imgur.com/czHvVds.png" target="_blank"><img src="https://i.imgur.com/czHvVds.png"></a><span class="qr-label">Camp Support</span></div>
-                            <div class="qr-item"><a href="https://i.imgur.com/AX4mx36.png" target="_blank"><img src="https://i.imgur.com/AX4mx36.png"></a><span class="qr-label">Rules PDF</span></div>
-                            <div class="qr-item"><a href="https://i.imgur.com/C97dcCY.png" target="_blank"><img src="https://i.imgur.com/C97dcCY.png"></a><span class="qr-label">Emergency</span></div>
+                            <div class="qr-item"><a href="https://i.imgur.com/A7KbjKK.png" target="_blank"><img src="https://i.imgur.com/A7KbjKK.png"></a><span class="qr-label">Site Fam</span></div>
+                            <div class="qr-item"><a href="https://i.imgur.com/czHvVds.png" target="_blank"><img src="https://i.imgur.com/czHvVds.png"></a><span class="qr-label">Support</span></div>
+                            <div class="qr-item"><a href="https://i.imgur.com/AX4mx36.png" target="_blank"><img src="https://i.imgur.com/AX4mx36.png"></a><span class="qr-label">Rules</span></div>
+                            <div class="qr-item"><a href="https://i.imgur.com/C97dcCY.png" target="_blank"><img src="https://i.imgur.com/C97dcCY.png"></a><span class="qr-label">SOS</span></div>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
                             <a href="https://1drv.ms/v/c/914d6cd9be74140f/IQAcyF20d_NnQYpL_R67iKQFAU6BN2XsG6dUrROiwIjBg8k?e=tPugor" target="_blank" class="action-btn">📺 Fam Video (Eng)</a>
@@ -398,31 +418,32 @@
                         </div>
                     `
                 },
-                {   // 3. INDEX (Back of Sheet 1)
+                {   // 3. INDEX
                     title: "INDEX / CONTENTS",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true",
                     body: `<ul class="index-list">
-                        <li onclick="goToSheet(2)">1. Emergency & Hotline</li>
-                        <li onclick="goToSheet(3)">2. Mandatory Drug Dec.</li>
-                        <li onclick="goToSheet(3)">3. Check-In & Check-Out</li>
-                        <li onclick="goToSheet(4)">4. General Discipline</li>
-                        <li onclick="goToSheet(4)">5. Respect Policy</li>
-                        <li onclick="goToSheet(5)">6. Room Rules</li>
-                        <li onclick="goToSheet(5)">7. Quiet Hours</li>
-                        <li onclick="goToSheet(6)">8. Hygiene & Housekeeping</li>
-                        <li onclick="goToSheet(6)">9. Smoking Policy</li>
-                        <li onclick="goToSheet(7)">10. Alcohol & Drugs</li>
-                        <li onclick="goToSheet(7)">11. Fire & Electrical</li>
-                        <li onclick="goToSheet(8)">12. Dining Rules</li>
-                        <li onclick="goToSheet(8)">13. Laundry Service</li>
-                        <li onclick="goToSheet(9)">14. Waste Segregation</li>
-                        <li onclick="goToSheet(9)">15. Vehicle & Parking</li>
-                        <li onclick="goToSheet(10)">16. Facilities</li>
-                        <li onclick="goToSheet(10)">17. Local Respect</li>
-                        <li onclick="goToSheet(11)">18. Reporting & Closing</li>
+                        <li onclick="goToSheet(2)">1. Helpline & Links</li>
+                        <li onclick="goToSheet(2)">2. Emergency & Hotline</li>
+                        <li onclick="goToSheet(3)">3. Mandatory Drug Dec.</li>
+                        <li onclick="goToSheet(3)">4. Check-In & Check-Out</li>
+                        <li onclick="goToSheet(4)">5. General Discipline</li>
+                        <li onclick="goToSheet(4)">6. Respect Policy</li>
+                        <li onclick="goToSheet(5)">7. Room Rules</li>
+                        <li onclick="goToSheet(5)">8. Quiet Hours</li>
+                        <li onclick="goToSheet(6)">9. Hygiene & Housekeeping</li>
+                        <li onclick="goToSheet(6)">10. Smoking Policy</li>
+                        <li onclick="goToSheet(7)">11. Alcohol & Drugs</li>
+                        <li onclick="goToSheet(7)">12. Fire & Electrical</li>
+                        <li onclick="goToSheet(8)">13. Dining Rules</li>
+                        <li onclick="goToSheet(8)">14. Laundry Service</li>
+                        <li onclick="goToSheet(9)">15. Waste Segregation</li>
+                        <li onclick="goToSheet(9)">16. Vehicle & Parking</li>
+                        <li onclick="goToSheet(10)">17. Facilities</li>
+                        <li onclick="goToSheet(10)">18. Local Respect</li>
+                        <li onclick="goToSheet(11)">19. Reporting & Closing</li>
                     </ul>`
                 },
-                {   // 4. EMERGENCY (Front of Sheet 2)
+                {   // 4. EMERGENCY
                     title: "1.0 EMERGENCY & HOTLINE",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true",
                     body: `<p>In any emergency, stay calm and contact the correct support team immediately.</p>
@@ -436,7 +457,7 @@
                     <h3>Emergency Steps:</h3>
                     <ol><li>Stay Calm</li><li>Call for Help</li><li>Move to Safe Area / Muster Point</li><li>Follow instructions from Security & HSSE</li></ol>`
                 },
-                {   // 5. DRUG DEC (Back of Sheet 2)
+                {   // 5. DRUG DEC
                     title: "2.0 DRUG DECLARATION",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/4.png?raw=true",
                     body: `<h3>Mandatory Before Departure</h3>
@@ -444,7 +465,7 @@
                     <a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">👉 Click to Submit Declaration</a>
                     <div class="box-warning"><b>Important:</b> False declaration or violation of BP/JGC drug policy may lead to immediate strict disciplinary action.</div>`
                 },
-                {   // 6. CHECK IN (Front of Sheet 3)
+                {   // 6. CHECK IN
                     title: "3.0 CHECK-IN & OUT",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/5.png?raw=true",
                     body: `<h3>Check-In (Arrival)</h3>
@@ -457,13 +478,13 @@
                     <ul><li>Inform Camp Office before your departure date/time.</li><li>Return room key. Clear room condition.</li></ul>
                     <div class="box-warning">Staying in camp without valid check-in is strictly prohibited.</div>`
                 },
-                {   // 7. DISCIPLINE (Back of Sheet 3)
+                {   // 7. DISCIPLINE
                     title: "4.0 GENERAL DISCIPLINE",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/6.png?raw=true",
                     body: `<h3>Code of Conduct</h3><p>Camp is a shared living environment. Respect and discipline are mandatory.</p>
                     <ul><li>Maintain professional behavior at all times.</li><li>Follow camp team instructions promptly.</li><li>Do not create conflict, arguments, or unnecessary disturbance.</li><li>Repeated misconduct may lead to restriction of camp privileges.</li></ul>`
                 },
-                {   // 8. RESPECT (Front of Sheet 4)
+                {   // 8. RESPECT
                     title: "5.0 RESPECT POLICY",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/7.png?raw=true",
                     body: `<h3>Zero Tolerance</h3><p>The camp supports a respectful workplace culture. The following are <b>strictly prohibited</b>:</p>
@@ -471,51 +492,50 @@
                     <p>Residents must treat everyone with dignity regardless of nationality, religion, position, or background.</p>
                     <a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCU3GdfvLyzRLmfyYyKbtKxAY3_suoHSAuKgqm4BEH9fqY?e=I3bds3" target="_blank" class="action-btn">🎧 Listen to Culture Audio</a>`
                 },
-                {   // 9. ROOMS (Back of Sheet 4)
+                {   // 9. ROOMS
                     title: "6.0 ROOM RULES",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/8.png?raw=true",
                     body: `<h3>Standards</h3><ul><li>Rooms are allocated by camp management only.</li><li>Room changes are not allowed without approval.</li><li>Do not allow unauthorized persons in your room.</li><li>Residents are responsible for room cleanliness and condition.</li><li>Any damage to furniture/equipment may be charged to the resident.</li><li>Keep corridor area clean. Do not place personal items outside.</li></ul>`
                 },
-                {   // 10. QUIET (Front of Sheet 5)
+                {   // 10. QUIET
                     title: "7.0 QUIET HOURS",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/9.png?raw=true",
                     body: `<h3>🕘 21:00 – 05:00</h3><ul><li>Keep your voice low in rooms and corridors.</li><li>No loud music, shouting, or noisy calls at night.</li><li>Respect sleeping residents.</li><li>Repeated disturbance may result in disciplinary action.</li></ul>`
                 },
-                {   // 11. HYGIENE (Back of Sheet 5)
+                {   // 11. HYGIENE
                     title: "8.0 HYGIENE",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/10.png?raw=true",
                     body: `<h3>Mandatory Standards</h3><ul><li>Keep your room clean and organized daily.</li><li>Dispose waste only in bins. No littering.</li><li><b>Toilet Etiquette:</b> Do not flush tissues, plastic, food waste, or solids. Use the bin.</li><li>Report any hygiene issue to camp support immediately.</li></ul>`
                 },
-                {   // 12. SMOKING (Front of Sheet 6)
+                {   // 12. SMOKING
                     title: "9.0 SMOKING POLICY",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/11.png?raw=true",
                     body: `<h3>🚭 Designated Areas Only</h3><ul><li>Smoking is allowed <b>only</b> in designated smoking shelters.</li><li>Smoking inside rooms, corridors, or buildings is strictly prohibited.</li><li>Dispose cigarette butts properly in sand buckets.</li></ul><p class="highlight-red">Violations are treated seriously due to fire/health risks.</p>`
                 },
-                {   // 13. ALCOHOL (Back of Sheet 6)
+                {   // 13. ALCOHOL
                     title: "10.0 ALCOHOL & DRUGS",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/12.png?raw=true",
                     body: `<h3>❌ Zero Tolerance</h3><p>Alcohol misuse, illegal drugs, prohibited substances, or related misconduct are strictly forbidden.</p><p>Any violation may result in:</p><ul class="highlight-red"><li>Immediate disciplinary action</li><li>Removal from camp</li><li>Escalation to security and management</li></ul>`
                 },
-                {   // 14. ELECTRICAL (Front of Sheet 7)
+                {   // 14. ELECTRICAL
                     title: "11.0 ELECTRICAL SAFETY",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/13.png?raw=true",
                     body: `<h3>⚡ Fire Prevention</h3><ul><li>Cooking in rooms is strictly prohibited without authorization.</li><li>Do not use rice cookers, hot plates, kettles, heaters, or unauthorized tools in rooms.</li><li>Do not overload sockets or modify wiring.</li><li>Report electrical issues immediately.</li></ul>`
                 },
-                {   // 15. FIRE SAFETY (Back of Sheet 7)
+                {   // 15. FIRE SAFETY
                     title: "11.1 FIRE SAFETY",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/14.png?raw=true",
-                    body: `<h3>🔥 Everyone's Responsibility</h3><ul><li>Do not tamper with alarms, detectors, or extinguishers.</li><li>Keep emergency exits clear.</li></ul><h3>In Case of Fire:</h3><p>✅ Raise Alarm → ✅ Call Security → ✅ Evacuate → ✅ Muster Point</p>`
+                    body: `<h3>🔥 Everyone's Responsibility</h3><ul><li>Do not tamper with alarms, detectors, or extinguishers.</li><li>Keep emergency exits clear.</li></ul><h3>In Case of Fire:</h3><p>✅ Raise Alarm → ✅ Call Security → ✅ Evacuate → ✅ Muster Point → ✅ Wait for Instructions</p>`
                 },
-                {   // 16. DINING (Front of Sheet 8)
+                {   // 16. DINING
                     title: "12.0 DINING HALL",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/15.png?raw=true",
-                    body: `<h3>🍽️ Canteen Rules</h3><ul><li>Wash hands before meals.</li><li>Proper dress required (No sleeveless/dirty PPE).</li><li><b>No Take-Away:</b> Removing food/utensils is prohibited to prevent pests.</li><li>Do not waste food. Take only what you can finish.</li><li>Clear your tray after eating.</li></ul>`
+                    body: `<h3>🍽️ Canteen Rules</h3><ul><li>Wash hands before meals.</li><li>Proper dress required (No sleeveless/dirty PPE).</li><li><b>No Take-Away:</b> Removing food/utensils is prohibited to prevent pests.</li><li>Do not waste food.</li><li>Clear your tray after eating.</li></ul>`
                 },
-                {   // 17. LAUNDRY (Back of Sheet 8)
+                {   // 17. LAUNDRY
                     title: "13.0 LAUNDRY SERVICE",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/16.png?raw=true",
-                    body: `<h3>🧺 App Mandatory</h3><p>Use <b>GHS Ubadari</b> App. User ID/Pass = Your Room Number.</p>
-                    <p class="highlight-red">Self cloth wash not allowed. Hanging clothes outside room not allowed.</p>
+                    body: `<h3>🧺 App Mandatory</h3><p>Laundry service is supported through the official Laundry Application: <b>GHS Ubadari</b>.</p>
                     <div style="background:#f0f0f0; padding:10px; border-radius:5px; text-align:center; margin:10px 0;">
                         <p style="margin-bottom:5px;"><b>Download Now:</b></p>
                         <div style="display:flex; gap:10px; justify-content:center;">
@@ -525,37 +545,37 @@
                     </div>
                     <p>Please follow laundry instructions inside the app to avoid delays and missing items. <i>Manual log book available if app fails.</i></p>`
                 },
-                {   // 18. WASTE (Front of Sheet 9)
+                {   // 18. WASTE
                     title: "14.0 WASTE SEGREGATION",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/17.png?raw=true",
                     body: `<h3>♻️ Environmental Care</h3><p>Dispose waste in the correct bins:</p><ul><li><b>Green:</b> Organic / Food Waste</li><li><b>Yellow:</b> Inorganic / Plastic / Paper</li><li><b>Red:</b> Hazardous / Medical</li></ul><p>Do not litter. Respect nature and keep camp surroundings clean.</p>`
                 },
-                {   // 19. VEHICLE (Back of Sheet 9)
+                {   // 19. VEHICLE
                     title: "15.0 VEHICLE & PARKING",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/18.png?raw=true",
                     body: `<h3>🚗 Speed Limit: 10 km/h</h3><ul><li>Speed limit inside camp must be followed strictly.</li><li>Park only in designated areas (Reverse Parking mandatory).</li><li>Do not block roads, walkways, or emergency access routes.</li><li>Drive carefully, respect pedestrians.</li></ul>`
                 },
-                {   // 20. FACILITIES (Front of Sheet 10)
+                {   // 20. FACILITIES
                     title: "16.0 FACILITIES",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/19.png?raw=true",
                     body: `<h3>🏋️ Usage Guidelines</h3><ul><li>Facilities are for everyone. Use responsibly.</li><li>Follow timings and booking process.</li><li>Keep facilities clean after use.</li><li>Follow safety rules in gym and recreation areas.</li></ul><a href="https://i.imgur.com/DBHITAd.png" target="_blank" class="action-btn">🔎 View Camp Map</a>`
                 },
-                {   // 21. LOCAL (Back of Sheet 10)
+                {   // 21. LOCAL
                     title: "17.0 LOCAL RESPECT",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/20.png?raw=true",
-                    body: `<h3>🌿 Community Pride</h3><p>We are guests in Papua. Please show respect and professionalism at all times.</p><ul><li>Respect local community, culture, and traditions.</li><li>Maintain polite behavior during travel and outside camp.</li><li>Do not create noise, conflict, or disrespectful actions.</li></ul>`
+                    body: `<h3>🌿 Community Pride</h3><p>We are guests in Papua. Please show respect and professionalism at all times.</p><ul><li>Respect local community, culture, and traditions.</li><li>Maintain polite behavior outside camp.</li><li>Do not create noise, conflict, or disrespectful actions.</li></ul>`
                 },
-                {   // 22. REPORTING (Front of Sheet 11)
+                {   // 22. REPORTING
                     title: "18.0 REPORTING",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/21.png?raw=true",
                     body: `<h3>📩 Feedback</h3><ul><li>Submit suggestions through official channels.</li><li>Report safety hazards immediately.</li><li>Serious issues (harassment, threats) must be reported confidentially.</li><li>Camp management will review and take action.</li></ul>`
                 },
-                {   // 23. CLOSING (Back of Sheet 11)
+                {   // 23. CLOSING
                     title: "CLOSING MESSAGE",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/22.png?raw=true",
-                    body: `<h3>Thank You</h3><p>Thank you for your cooperation and discipline. A safe and comfortable camp is only possible when everyone respects the rules and supports the system.</p><p>Your responsible behavior helps:</p><ul><li>✅ protect people</li><li>✅ prevent incidents</li><li>✅ ensure project success</li></ul><p><b>One Team </b></p>`
+                    body: `<h3>Thank You</h3><p>Thank you for your cooperation and discipline. A safe and comfortable camp is only possible when everyone respects the rules and supports the system.</p><p>Your responsible behavior helps:</p><ul><li>✅ protect people</li><li>✅ prevent incidents</li><li>✅ ensure project success</li></ul><p><b>Camp Incharge – Deepak Sharma</b></p>`
                 },
-                {   // 24. LINKS (Front of Sheet 12) - End
+                {   // 24. LINKS
                     title: "IMPORTANT LINKS",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/23.png?raw=true",
                     body: `<h3>Quick Access</h3><a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">✅ Drug Declaration Form</a><a href="https://apps.apple.com/us/app/ghs-ubadari/id6757686938" target="_blank" class="action-btn">🍎 Laundry App (iOS)</a><a href="https://play.google.com/store/apps/details?id=com.gdsk.ghs_ubadari&pcampaignid=web_share" target="_blank" class="action-btn">🤖 Laundry App (Android)</a><br><button class="action-btn" onclick="goToSheet(0)" style="background:var(--mustard-yellow);">RETURN TO COVER</button>`
@@ -563,20 +583,20 @@
             ],
             // === INDONESIAN CONTENT ===
             id: [
-                 { type: "cover", image: "https://github.com/mrbharadvaja/camprules/blob/main/cover%20image.png?raw=true", title: "PROYEK TANGGUH UCC", subtitle: "ATURAN & PANDUAN KONTRAKTOR CAMP (2026–2027)", body: `<div style="text-align:center; font-size:0.85rem;"><p style="text-align:center; margin-bottom:5px;"><b>Klien:</b> BP Indonesia | <b>Kontraktor:</b> JGC</p><p style="text-align:center; margin-bottom:5px;"><b>Penanggung Jawab:</b> Deepak Sharma</p><p style="text-align:center;"><b>Tanggal:</b> ${getDate()}</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span class="qr-text" style="background:var(--mustard-yellow); color:black;">Pindai Aturan</span></div></div></div>` },
-                 { title: "PESAN SAMBUTAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/1.png?raw=true", body: `<p>Selamat datang di Kontraktor Camp Proyek Tangguh UCC. Camp ini adalah rumah kedua Anda. Komitmen kami adalah menyediakan lingkungan yang aman, tertib, saling menghormati, dan nyaman untuk semua penghuni.</p><p>Aturan ini untuk menjaga:</p><ul><li>✅ Keselamatan</li><li>✅ Kebersihan</li><li>✅ Saling Menghormati</li><li>✅ Kelancaran Operasi</li></ul><p>Kerja sama Anda sangat penting. Saat semua orang mengikuti standar yang sama, camp tetap nyaman.</p><p><b>Camp Incharge – Deepak Sharma</b></p>` },
+                 { type: "cover", image: "https://github.com/mrbharadvaja/camprules/blob/main/cover%20image.png?raw=true", title: "PROYEK TANGGUH UCC", subtitle: "ATURAN & PANDUAN KONTRAKTOR CAMP (2026–2027)", body: `<div style="text-align:center; font-size:0.85rem;"><div class="greeting-text">${getPapuaGreeting()}</div><p style="text-align:center; margin-bottom:5px;"><b>Klien:</b> BP Indonesia | <b>Kontraktor:</b> JGC</p><p style="text-align:center; margin-bottom:5px;"><b>Dibuat oleh:</b> Deepak Sharma</p><p style="text-align:center;"><b>Tanggal:</b> ${getDate()}</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png" style="width: 50px !important; height: 50px !important;"><span class="qr-text" style="background:var(--mustard-yellow); color:black;">Pindai Aturan</span></div></div></div>` },
+                 { title: "PESAN SAMBUTAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/1.png?raw=true", body: `<p>Selamat datang di Kontraktor Camp Tangguh UCC. Camp ini adalah rumah kedua Anda. Komitmen kami adalah menyediakan lingkungan yang aman, tertib, dan nyaman.</p><p>Aturan ini untuk menjaga:</p><ul><li>✅ Keselamatan</li><li>✅ Kebersihan</li><li>✅ Saling Menghormati</li><li>✅ Kelancaran Operasi</li></ul><p>Kerja sama Anda sangat penting.</p><p><b>One Team UCC</b></p>` },
                  { title: "HELPLINE & TAUTAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<div style="background:#f0f0f0; padding:10px; border-radius:5px; margin-bottom:15px;"><h3 style="margin-top:0;">📞 Kontak Camp</h3><ul style="font-size:0.75rem; margin-bottom:0;"><li><b>Maintenance:</b> +62 811-1089-4447</li><li><b>Help Desk:</b> +62 811-1089-4447</li><li><b>GDSK Incharge (Victor):</b> 0812 8222 0053</li><li><b>JGC Manager (Deepak):</b> 0813 2288 259</li><li><b>Tim Camp (Mario):</b> 0823 1678 5900</li></ul></div><h3>🔗 Panduan Akses Cepat</h3><div class="grid-links"><div class="qr-item"><a href="https://i.imgur.com/A7KbjKK.png" target="_blank"><img src="https://i.imgur.com/A7KbjKK.png"></a><span class="qr-label">Panduan Situs</span></div><div class="qr-item"><a href="https://i.imgur.com/czHvVds.png" target="_blank"><img src="https://i.imgur.com/czHvVds.png"></a><span class="qr-label">Support Camp</span></div><div class="qr-item"><a href="https://i.imgur.com/AX4mx36.png" target="_blank"><img src="https://i.imgur.com/AX4mx36.png"></a><span class="qr-label">PDF Aturan</span></div><div class="qr-item"><a href="https://i.imgur.com/C97dcCY.png" target="_blank"><img src="https://i.imgur.com/C97dcCY.png"></a><span class="qr-label">Darurat</span></div></div><div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;"><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQAcyF20d_NnQYpL_R67iKQFAU6BN2XsG6dUrROiwIjBg8k?e=tPugor" target="_blank" class="action-btn">📺 Fam Video (Eng)</a><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBuq6Qd_zq-TqnGq4Z-mMTVAaKjGHESYH8BPFpQn9SSflE?e=TpsZay" target="_blank" class="action-btn">📺 Fam Video (Ind)</a><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQAz5kwWQ2imTZ7S0GU0UBJAAXlZB-4PceVp71wXgcoJ310?e=G2nHRm" target="_blank" class="action-btn">🎧 Rules Audio (Eng)</a><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCgF89THYByT4O2JroKJgn9AVcKlUvAHmlhvWBzvDb2A3k?e=sPxw9V" target="_blank" class="action-btn">🎧 Rules Audio (Ind)</a></div>` },
-                 { title: "DAFTAR ISI", image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true", body: `<ul class="index-list"><li onclick="goToSheet(2)">1. Darurat & Hotline</li><li onclick="goToSheet(3)">2. Deklarasi Narkoba</li><li onclick="goToSheet(3)">3. Masuk Camp</li><li onclick="goToSheet(4)">4. Disiplin Umum</li><li onclick="goToSheet(4)">5. Kebijakan Hormat</li><li onclick="goToSheet(5)">6. Aturan Kamar</li><li onclick="goToSheet(5)">7. Jam Tenang</li><li onclick="goToSheet(6)">8. Kebersihan</li><li onclick="goToSheet(6)">9. Merokok</li><li onclick="goToSheet(7)">10. Alkohol & Narkoba</li><li onclick="goToSheet(7)">11. Keselamatan Api</li><li onclick="goToSheet(8)">12. Kantin</li><li onclick="goToSheet(8)">13. Laundry</li><li onclick="goToSheet(9)">14. Sampah</li><li onclick="goToSheet(9)">15. Kendaraan</li><li onclick="goToSheet(10)">16. Fasilitas</li><li onclick="goToSheet(10)">17. Hormati Papua</li><li onclick="goToSheet(11)">18. Pelaporan</li></ul>` },
-                 { title: "1.0 DARURAT", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<p>Dalam keadaan darurat, tetap tenang dan hubungi tim terkait.</p><ul style="font-weight:bold;"><li>🚨 Security SOS: +62 811-1089-4447</li><li>🏥 Klinik: Ext. 118</li><li>🔥 Kebakaran: Ext. 911</li><li>⚡ Maintenance: +62 811-1089-4447</li><li>🆘 Camp Help Desk: +62 811-1089-4447</li></ul><h3>Langkah Darurat:</h3><ol><li>Tetap Tenang</li><li>Hubungi Bantuan</li><li>Ke Titik Kumpul</li><li>Ikuti Arahan Security</li></ol>` },
-                 { title: "2.0 DEKLARASI NARKOBA", image: "https://github.com/mrbharadvaja/camprules/blob/main/4.png?raw=true", body: `<h3>Wajib Sebelum Berangkat</h3><p>Semua penghuni wajib mengisi formulir Deklarasi Narkoba sebelum perjalanan.</p><a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">👉 Klik Isi Deklarasi</a><div class="box-warning"><b>Penting:</b> Deklarasi palsu dapat menyebabkan tindakan disiplin tegas.</div>` },
-                 { title: "3.0 CHECK-IN & OUT", image: "https://github.com/mrbharadvaja/camprules/blob/main/5.png?raw=true", body: `<h3>Check-In</h3><ul><li>Lapor ke Kantor Camp saat tiba.</li><li>Lengkapi registrasi dan terima kamar.</li><li>Ambil ID Camp. Ikuti induksi.</li></ul><div class="qr-container"><div class="qr-item"><img src="https://i.imgur.com/ivsPL5x.png"><span class="qr-label">Video Induksi</span></div><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBldzyivV6tQYZc4oSAKh5cATDOFZEMi_eodIOP-B_LzUM?e=Qpc0oU" target="_blank" class="action-btn">Tonton Video</a></div><h3>Check-Out</h3><ul><li>Info Kantor Camp sebelum berangkat.</li><li>Kembalikan kunci.</li></ul><div class="box-warning">Dilarang tinggal tanpa check-in valid.</div>` },
+                 { title: "DAFTAR ISI", image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true", body: `<ul class="index-list"><li onclick="goToSheet(2)">1. Helpline & Links</li><li onclick="goToSheet(2)">2. Darurat & Hotline</li><li onclick="goToSheet(3)">3. Deklarasi Narkoba</li><li onclick="goToSheet(3)">4. Masuk Camp</li><li onclick="goToSheet(4)">5. Disiplin Umum</li><li onclick="goToSheet(4)">6. Kebijakan Hormat</li><li onclick="goToSheet(5)">7. Aturan Kamar</li><li onclick="goToSheet(5)">8. Jam Tenang</li><li onclick="goToSheet(6)">9. Kebersihan</li><li onclick="goToSheet(6)">10. Merokok</li><li onclick="goToSheet(7)">11. Alkohol & Narkoba</li><li onclick="goToSheet(7)">12. Keselamatan Api</li><li onclick="goToSheet(8)">13. Kantin</li><li onclick="goToSheet(8)">14. Laundry</li><li onclick="goToSheet(9)">15. Sampah</li><li onclick="goToSheet(9)">16. Kendaraan</li><li onclick="goToSheet(10)">17. Fasilitas</li><li onclick="goToSheet(10)">18. Hormati Papua</li><li onclick="goToSheet(11)">19. Pelaporan</li></ul>` },
+                 { title: "1.0 DARURAT", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<p>Dalam keadaan darurat, tetap tenang dan hubungi tim terkait.</p><ul style="font-weight:bold;"><li>🚨 Security SOS: +62 811-1089-4447</li><li>🏥 Klinik: Ext. 118</li><li>🔥 Kebakaran: Ext. 911</li><li>⚡ Maintenance: +62 811-1089-4447</li></ul><h3>Langkah Darurat:</h3><ol><li>Tetap Tenang</li><li>Hubungi Bantuan</li><li>Ke Titik Kumpul</li><li>Ikuti Arahan Security</li></ol>` },
+                 { title: "2.0 DEKLARASI NARKOBA", image: "https://github.com/mrbharadvaja/camprules/blob/main/4.png?raw=true", body: `<h3>Wajib Sebelum Berangkat</h3><p>Semua penghuni wajib mengisi formulir Deklarasi Narkoba sebelum perjalanan.</p><a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">👉 Isi Deklarasi</a><div class="box-warning"><b>Penting:</b> Deklarasi palsu dapat menyebabkan tindakan disiplin tegas.</div>` },
+                 { title: "3.0 CHECK-IN & OUT", image: "https://github.com/mrbharadvaja/camprules/blob/main/5.png?raw=true", body: `<h3>Check-In</h3><ul><li>Lapor ke Kantor Camp saat tiba.</li><li>Lengkapi registrasi.</li><li>Ambil ID Camp. Ikuti induksi.</li></ul><div class="qr-container"><div class="qr-item"><img src="https://i.imgur.com/ivsPL5x.png"><span class="qr-label">Video Induksi</span></div><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBldzyivV6tQYZc4oSAKh5cATDOFZEMi_eodIOP-B_LzUM?e=Qpc0oU" target="_blank" class="action-btn">Tonton Video</a></div><h3>Check-Out</h3><ul><li>Info Kantor Camp sebelum berangkat.</li><li>Kembalikan kunci.</li></ul><div class="box-warning">Dilarang tinggal tanpa check-in valid.</div>` },
                  { title: "4.0 DISIPLIN UMUM", image: "https://github.com/mrbharadvaja/camprules/blob/main/6.png?raw=true", body: `<h3>Kode Etik</h3><p>Camp adalah tempat tinggal bersama. Disiplin wajib.</p><ul><li>Jaga sikap profesional.</li><li>Ikuti arahan tim camp.</li><li>Jangan membuat konflik.</li><li>Pelanggaran berulang = sanksi.</li></ul>` },
                  { title: "5.0 KEBIJAKAN HORMAT", image: "https://github.com/mrbharadvaja/camprules/blob/main/7.png?raw=true", body: `<h3>Kebijakan Nol Toleransi</h3><p>Dilarang keras:</p><ul class="highlight-red"><li>Bullying & Pelecehan</li><li>Diskriminasi</li><li>Kekerasan fisik</li></ul><p>Hormati semua orang tanpa memandang latar belakang.</p><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCU3GdfvLyzRLmfyYyKbtKxAY3_suoHSAuKgqm4BEH9fqY?e=I3bds3" target="_blank" class="action-btn">🎧 Audio Budaya Situs</a>` },
                  { title: "6.0 ATURAN KAMAR", image: "https://github.com/mrbharadvaja/camprules/blob/main/8.png?raw=true", body: `<h3>Standar</h3><ul><li>Kamar diatur manajemen.</li><li>Dilarang pindah tanpa izin.</li><li>Dilarang bawa tamu tak dikenal.</li><li>Jaga kebersihan kamar.</li><li>Kerusakan akan dikenakan biaya.</li><li>Koridor harus bersih.</li></ul>` },
                  { title: "7.0 JAM TENANG", image: "https://github.com/mrbharadvaja/camprules/blob/main/9.png?raw=true", body: `<h3>🕘 21:00 – 05:00</h3><ul><li>Jaga suara pelan di kamar/koridor.</li><li>Dilarang musik keras.</li><li>Hormati yang sedang istirahat.</li><li>Gangguan berulang = sanksi.</li></ul>` },
                  { title: "8.0 KEBERSIHAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/10.png?raw=true", body: `<h3>Standar Wajib</h3><ul><li>Jaga kamar bersih setiap hari.</li><li>Buang sampah di tempatnya.</li><li><b>Toilet:</b> Jangan buang tisu/plastik/sampah ke kloset. Gunakan tong sampah.</li><li>Lapor masalah kebersihan segera.</li></ul>` },
                  { title: "9.0 KEBIJAKAN MEROKOK", image: "https://github.com/mrbharadvaja/camprules/blob/main/11.png?raw=true", body: `<h3>🚭 Hanya Area Khusus</h3><ul><li>Merokok <b>hanya</b> di shelter yang ditentukan.</li><li>Dilarang di dalam kamar atau koridor.</li><li>Buang puntung di ember pasir.</li></ul><p class="highlight-red">Pelanggaran ditindak tegas karena risiko kebakaran.</p>` },
-                 { title: "10.0 ALKOHOL & NARKOBA", image: "https://github.com/mrbharadvaja/camprules/blob/main/12.png?raw=true", body: `<h3>❌ Nol Toleransi</h3><p>Penyalahgunaan alkohol dan narkoba dilarang keras. Pelanggaran = Dikeluarkan dari camp dan lapor Security.</p>` },
+                 { title: "10.0 ALKOHOL & NARKOBA", image: "https://github.com/mrbharadvaja/camprules/blob/main/12.png?raw=true", body: `<h3>❌ Nol Toleransi</h3><p>Penyalahgunaan alkohol dan narkoba dilarang keras.</p><p>Pelanggaran mengakibatkan:</p><ul class="highlight-red"><li>Tindakan disiplin langsung</li><li>Dikeluarkan dari camp</li><li>Lapor ke Security</li></ul>` },
                  { title: "11.0 LISTRIK", image: "https://github.com/mrbharadvaja/camprules/blob/main/13.png?raw=true", body: `<h3>⚡ Cegah Kebakaran</h3><ul><li>Dilarang memasak di kamar.</li><li>Jangan pakai rice cooker/pemanas di kamar.</li><li>Jangan membebani stop kontak.</li><li>Lapor masalah listrik segera.</li></ul>` },
                  { title: "11.1 KESELAMATAN API", image: "https://github.com/mrbharadvaja/camprules/blob/main/14.png?raw=true", body: `<h3>🔥 Tanggung Jawab Bersama</h3><ul><li>Jangan rusak alarm atau APAR.</li><li>Jaga pintu darurat bebas hambatan.</li></ul><h3>Saat Kebakaran:</h3><p>✅ Bunyikan Alarm → ✅ Hubungi Security → ✅ Evakuasi → ✅ Titik Kumpul</p>` },
                  { title: "12.0 KANTIN", image: "https://github.com/mrbharadvaja/camprules/blob/main/15.png?raw=true", body: `<h3>🍽️ Aturan Makan</h3><ul><li>Cuci tangan sebelum makan.</li><li>Pakaian sopan (No sleeveless).</li><li><b>Dilarang Bawa Pulang:</b> Makanan/alat makan harus tetap di kantin.</li><li>Jangan buang makanan.</li><li>Bersihkan meja setelah makan.</li></ul>` },
@@ -586,16 +606,16 @@
                  { title: "16.0 FASILITAS", image: "https://github.com/mrbharadvaja/camprules/blob/main/19.png?raw=true", body: `<h3>🏋️ Pedoman</h3><ul><li>Gunakan dengan tanggung jawab.</li><li>Ikuti jam operasional.</li><li>Jaga kebersihan alat gym.</li><li>Kerusakan = pembatasan akses.</li></ul><a href="https://i.imgur.com/DBHITAd.png" target="_blank" class="action-btn">🔎 Lihat Peta</a>` },
                  { title: "17.0 HORMATI PAPUA", image: "https://github.com/mrbharadvaja/camprules/blob/main/20.png?raw=true", body: `<h3>🌿 Kebanggaan Lokal</h3><p>Kita tamu di Papua. Harap selalu hormat.</p><ul><li>Hormati budaya & tradisi lokal.</li><li>Sopan santun di luar camp.</li><li>Jangan membuat keributan atau konflik.</li></ul>` },
                  { title: "18.0 PELAPORAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/21.png?raw=true", body: `<h3>📩 Masukan</h3><ul><li>Kirim saran lewat jalur resmi.</li><li>Lapor bahaya segera.</li><li>Masalah serius (pelecehan) lapor secara rahasia.</li></ul>` },
-                 { title: "PENUTUP", image: "https://github.com/mrbharadvaja/camprules/blob/main/22.png?raw=true", body: `<h3>Terima Kasih</h3><p>Kerja sama Anda menjamin camp yang aman dan nyaman bagi semua.</p><p><b>Camp Incharge – Deepak Sharma</b></p>` },
-                 { title: "TAUTAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/23.png?raw=true", body: `<a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">✅ Formulir Deklarasi</a><a href="https://apps.apple.com/us/app/ghs-ubadari/id6757686938" target="_blank" class="action-btn">🍎 Laundry App (iOS)</a><a href="https://play.google.com/store/apps/details?id=com.gdsk.ghs_ubadari&pcampaignid=web_share" target="_blank" class="action-btn">🤖 Laundry App (Android)</a><br><button class="action-btn" onclick="goToSheet(0)" style="background:var(--mustard-yellow);">KEMBALI KE DEPAN</button>` }
+                 { title: "PENUTUP", image: "https://github.com/mrbharadvaja/camprules/blob/main/22.png?raw=true", body: `<h3>Terima Kasih</h3><p>Kerja sama Anda menjamin camp yang aman dan nyaman bagi semua.</p><p><b>One Team UCC</b></p>` },
+                 { title: "TAUTAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/23.png?raw=true", body: `<a href="#" class="action-btn">✅ Formulir Deklarasi</a><br><button class="action-btn" onclick="goToSheet(0)" style="background:var(--mustard-yellow);">KEMBALI KE DEPAN</button>` }
             ],
-            // === FULL JAPANESE TRANSLATION (Best Effort) ===
+            // === JAPANESE CONTENT ===
             jp: [
-                 { type: "cover", image: "https://github.com/mrbharadvaja/camprules/blob/main/cover%20image.png?raw=true", title: "タングーUCCプロジェクト", subtitle: "コントラクターキャンプ ルール＆ガイドライン (2026–2027)", body: `<div style="text-align:center; font-size:0.9rem;"><p><b>クライアント:</b> BP Indonesia | <b>コントラクター:</b> JGC</p><p><b>責任者:</b> Deepak Sharma</p><p><b>日付:</b> ${getDate()}</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png"><span class="qr-text" style="background:var(--mustard-yellow); color:black;">完全なルール</span></div></div></div>` },
-                 { title: "歓迎メッセージ", image: "https://github.com/mrbharadvaja/camprules/blob/main/1.png?raw=true", body: `<p>タングーUCCコントラクターキャンプへようこそ。このキャンプは皆様の「第二の住まい」です。</p><p>本ルールの目的：</p><ul><li>✅ 安全</li><li>✅ 衛生</li><li>✅ 尊重</li><li>✅ 円滑な運営</li></ul><p>皆様のご協力が不可欠です。共にプロジェクトの成功を支えましょう。</p><p><b>キャンプ責任者 – Deepak Sharma</b></p>` },
+                 { type: "cover", image: "https://github.com/mrbharadvaja/camprules/blob/main/cover%20image.png?raw=true", title: "タングーUCCプロジェクト", subtitle: "コントラクターキャンプ ルール＆ガイドライン (2026–2027)", body: `<div style="text-align:center; font-size:0.85rem;"><div class="greeting-text">${getPapuaGreeting()}</div><p style="text-align:center; margin-bottom:5px;"><b>クライアント:</b> BP Indonesia | <b>コントラクター:</b> JGC</p><p style="text-align:center; margin-bottom:5px;"><b>作成者:</b> Deepak Sharma</p><p style="text-align:center;"><b>日付:</b> ${getDate()}</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png" style="width: 50px !important; height: 50px !important;"><span class="qr-text" style="background:var(--mustard-yellow); color:black;">完全なルール</span></div></div></div>` },
+                 { title: "歓迎メッセージ", image: "https://github.com/mrbharadvaja/camprules/blob/main/1.png?raw=true", body: `<p>タングーUCCコントラクターキャンプへようこそ。このキャンプは皆様の「第二の住まい」です。</p><p>本ルールの目的：</p><ul><li>✅ 安全</li><li>✅ 衛生</li><li>✅ 尊重</li><li>✅ 円滑な運営</li></ul><p>皆様のご協力が不可欠です。共にプロジェクトの成功を支えましょう。</p><p><b>One Team UCC</b></p>` },
                  { title: "ヘルプラインとリンク", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<div style="background:#f0f0f0; padding:10px; border-radius:5px; margin-bottom:15px;"><h3 style="margin-top:0;">📞 連絡先</h3><ul style="font-size:0.75rem;"><li><b>メンテナンス:</b> +62 811-1089-4447</li><li><b>ヘルプデスク:</b> +62 811-1089-4447</li><li><b>GDSK責任者:</b> Mr. Victor (0812 8222 0053)</li><li><b>JGCマネージャー:</b> Mr. Deepak (0813 2288 259)</li><li><b>キャンプチーム:</b> Mr. Mario (0823 1678 5900)</li></ul></div><h3>🔗 クイックアクセス</h3><div class="grid-links"><div class="qr-item"><a href="https://i.imgur.com/A7KbjKK.png" target="_blank"><img src="https://i.imgur.com/A7KbjKK.png"></a><span class="qr-label">サイトガイド</span></div><div class="qr-item"><a href="https://i.imgur.com/czHvVds.png" target="_blank"><img src="https://i.imgur.com/czHvVds.png"></a><span class="qr-label">サポート</span></div><div class="qr-item"><a href="https://i.imgur.com/AX4mx36.png" target="_blank"><img src="https://i.imgur.com/AX4mx36.png"></a><span class="qr-label">ルールPDF</span></div><div class="qr-item"><a href="https://i.imgur.com/C97dcCY.png" target="_blank"><img src="https://i.imgur.com/C97dcCY.png"></a><span class="qr-label">緊急時</span></div></div><div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;"><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQAcyF20d_NnQYpL_R67iKQFAU6BN2XsG6dUrROiwIjBg8k?e=tPugor" target="_blank" class="action-btn">📺 動画 (英)</a><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBuq6Qd_zq-TqnGq4Z-mMTVAaKjGHESYH8BPFpQn9SSflE?e=TpsZay" target="_blank" class="action-btn">📺 動画 (尼)</a><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQAz5kwWQ2imTZ7S0GU0UBJAAXlZB-4PceVp71wXgcoJ310?e=G2nHRm" target="_blank" class="action-btn">🎧 音声 (英)</a><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCgF89THYByT4O2JroKJgn9AVcKlUvAHmlhvWBzvDb2A3k?e=sPxw9V" target="_blank" class="action-btn">🎧 音声 (尼)</a></div>` },
-                 { title: "目次", image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true", body: `<ul class="index-list"><li onclick="goToSheet(2)">1. 緊急連絡先</li><li onclick="goToSheet(3)">2. ドラッグ申告</li><li onclick="goToSheet(3)">3. 入寮・退寮</li><li onclick="goToSheet(4)">4. 行動規範</li><li onclick="goToSheet(4)">5. 尊重ポリシー</li><li onclick="goToSheet(5)">6. 部屋のルール</li><li onclick="goToSheet(5)">7. 静粛時間</li><li onclick="goToSheet(6)">8. 衛生管理</li><li onclick="goToSheet(6)">9. 喫煙</li><li onclick="goToSheet(7)">10. アルコール</li><li onclick="goToSheet(7)">11. 防火安全</li><li onclick="goToSheet(8)">12. 食堂</li><li onclick="goToSheet(8)">13. ランドリー</li><li onclick="goToSheet(9)">14. ゴミ分別</li><li onclick="goToSheet(9)">15. 車両</li><li onclick="goToSheet(10)">16. 施設</li><li onclick="goToSheet(10)">17. 地域尊重</li><li onclick="goToSheet(11)">18. 報告</li></ul>` },
-                 { title: "1.0 緊急時", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<p>緊急時は落ち着いて連絡してください。</p><ul style="font-weight:bold;"><li>🚨 セキュリティ: +62 811-1089-4447</li><li>🏥 医療: Ext. 118</li><li>🔥 火災: Ext. 911</li><li>⚡ メンテナンス: +62 811-1089-4447</li><li>🆘 ヘルプデスク: +62 811-1089-4447</li></ul><h3>手順:</h3><ol><li>落ち着く</li><li>助けを呼ぶ</li><li>集合場所へ避難</li><li>指示に従う</li></ol>` },
+                 { title: "目次", image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true", body: `<ul class="index-list"><li onclick="goToSheet(2)">1. ヘルプライン</li><li onclick="goToSheet(2)">2. 緊急連絡先</li><li onclick="goToSheet(3)">3. ドラッグ申告</li><li onclick="goToSheet(3)">4. 入寮・退寮</li><li onclick="goToSheet(4)">5. 行動規範</li><li onclick="goToSheet(4)">6. 尊重ポリシー</li><li onclick="goToSheet(5)">7. 部屋のルール</li><li onclick="goToSheet(5)">8. 静粛時間</li><li onclick="goToSheet(6)">9. 衛生管理</li><li onclick="goToSheet(6)">10. 喫煙</li><li onclick="goToSheet(7)">11. アルコール</li><li onclick="goToSheet(7)">12. 防火安全</li><li onclick="goToSheet(8)">13. 食堂</li><li onclick="goToSheet(8)">14. ランドリー</li><li onclick="goToSheet(9)">15. ゴミ分別</li><li onclick="goToSheet(9)">16. 車両</li><li onclick="goToSheet(10)">17. 施設</li><li onclick="goToSheet(10)">18. 地域尊重</li><li onclick="goToSheet(11)">19. 報告</li></ul>` },
+                 { title: "1.0 緊急時", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<p>緊急時は落ち着いて連絡してください。</p><ul style="font-weight:bold;"><li>🚨 セキュリティ: +62 811-1089-4447</li><li>🏥 医療: Ext. 118</li><li>🔥 火災: Ext. 911</li><li>⚡ メンテナンス: +62 811-1089-4447</li></ul><h3>手順:</h3><ol><li>落ち着く</li><li>助けを呼ぶ</li><li>集合場所へ避難</li><li>指示に従う</li></ol>` },
                  { title: "2.0 ドラッグ申告", image: "https://github.com/mrbharadvaja/camprules/blob/main/4.png?raw=true", body: `<h3>出発前必須</h3><p>全居住者はドラッグ申告フォームの提出が必要です。</p><a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">👉 提出はこちら</a><div class="box-warning"><b>重要:</b> 虚偽申告は厳正処分の対象です。</div>` },
                  { title: "3.0 入寮・退寮", image: "https://github.com/mrbharadvaja/camprules/blob/main/5.png?raw=true", body: `<h3>チェックイン</h3><ul><li>到着後事務所へ報告。</li><li>登録完了。</li><li>ID受領。導入ビデオ視聴。</li></ul><div class="qr-container"><div class="qr-item"><img src="https://i.imgur.com/ivsPL5x.png"><span class="qr-label">導入ビデオ</span></div><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBldzyivV6tQYZc4oSAKh5cATDOFZEMi_eodIOP-B_LzUM?e=Qpc0oU" target="_blank" class="action-btn">ビデオを見る</a></div><h3>チェックアウト</h3><ul><li>出発前に連絡。</li><li>鍵返却。</li></ul><div class="box-warning">無断滞在は禁止です。</div>` },
                  { title: "4.0 行動規範", image: "https://github.com/mrbharadvaja/camprules/blob/main/6.png?raw=true", body: `<p>共同生活の場です。規律を守ってください。</p><ul><li>プロとして行動する。</li><li>指示に従う。</li><li>争いを避ける。</li><li>違反は利用制限対象。</li></ul>` },
@@ -614,7 +634,7 @@
                  { title: "16.0 施設", image: "https://github.com/mrbharadvaja/camprules/blob/main/19.png?raw=true", body: `<h3>🏋️ ガイドライン</h3><ul><li>きれいに使う。</li><li>時間厳守。</li><li>安全規則を守る。</li></ul><a href="https://i.imgur.com/DBHITAd.png" target="_blank" class="action-btn">🔎 地図を見る</a>` },
                  { title: "17.0 地域尊重", image: "https://github.com/mrbharadvaja/camprules/blob/main/20.png?raw=true", body: `<h3>🌿 地域の誇り</h3><p>私たちはゲストです。文化と伝統を尊重し、礼儀正しく行動しましょう。</p>` },
                  { title: "18.0 報告", image: "https://github.com/mrbharadvaja/camprules/blob/main/21.png?raw=true", body: `<h3>📩 フィードバック</h3><p>危険箇所や提案は公式ルートで報告してください。機密は守られます。</p>` },
-                 { title: "締め", image: "https://github.com/mrbharadvaja/camprules/blob/main/22.png?raw=true", body: `<h3>感謝</h3><p>安全で快適なキャンプのためにご協力をお願いします。</p><p><b>キャンプ責任者 – Deepak Sharma</b></p>` },
+                 { title: "締め", image: "https://github.com/mrbharadvaja/camprules/blob/main/22.png?raw=true", body: `<h3>感謝</h3><p>安全で快適なキャンプのためにご協力をお願いします。</p><p><b>One Team UCC</b></p>` },
                  { title: "リンク", image: "https://github.com/mrbharadvaja/camprules/blob/main/23.png?raw=true", body: `<a href="#" class="action-btn">✅ 申告フォーム</a><br><button class="action-btn" onclick="goToSheet(0)" style="background:var(--mustard-yellow);">表紙に戻る</button>` }
             ]
         };
@@ -626,7 +646,35 @@
         };
 
         function init() {
+            window.addEventListener('resize', resizeBook);
             setLang('en');
+            resizeBook();
+        }
+
+        // --- RESIZE LOGIC (Auto-Fit) ---
+        function resizeBook() {
+            const book = document.getElementById('book');
+            const pageWidth = 480;
+            const pageHeight = 680;
+            const isMobile = window.innerWidth < 768;
+            
+            // Visual width: Desktop = 2 pages (Spread), Mobile = 1 page
+            const visualWidth = isMobile ? pageWidth : (pageWidth * 2);
+            
+            // Calculate scale to fit screen minus margins
+            const availW = window.innerWidth * 0.95;
+            const availH = (window.innerHeight - 40) * 0.95; // 40px for footer
+            
+            const scale = Math.min(availW / visualWidth, availH / pageHeight);
+            const finalScale = Math.min(scale, 1.2); // Max zoom cap
+            
+            book.style.transform = `scale(${finalScale})`;
+            
+            if (isMobile) {
+                book.style.left = '0px'; 
+            } else {
+                // If desktop, center the spine
+            }
         }
 
         function setLang(lang) {
@@ -635,7 +683,6 @@
             renderBook();
         }
 
-        // --- RENDER BOOK ---
         function renderBook() {
             const book = document.getElementById('book');
             book.innerHTML = '';
@@ -686,7 +733,7 @@
                     <div class="footer-note">${currentLang === 'en' ? 'For more information contact camp reception.' : (currentLang === 'id' ? 'Untuk informasi lebih lanjut hubungi resepsionis camp.' : '詳細はキャンプ受付までお問い合わせください。')}</div>
                     <div class="nav-controls">
                         <button class="nav-btn" onclick="prevSheet()">&#8592;</button>
-                        <button class="nav-btn" onclick="goToSheet(2)" style="font-weight:bold; color:var(--parrot-green);">[INDEX]</button>
+                        <button class="nav-btn" onclick="goToSheet(2)" style="font-weight:bold; color:var(--parrot-green); font-size:1.2rem; line-height:1;">🏠</button>
                         <span>${pageNum}</span>
                         <button class="nav-btn" onclick="nextSheet()">&#8594;</button>
                     </div>
@@ -717,7 +764,7 @@
                             ${data.extra || ''}
                         </div>
                         <button class="action-btn" onclick="nextSheet()" style="margin-top:10px; width:100%; background:var(--black); color:white;">OPEN BOOK</button>
-                        <button class="nav-btn" onclick="goToSheet(3)" style="margin-top:5px; border:none; color:grey; font-size:0.7rem;">Go to Index</button>
+                        <button class="nav-btn" onclick="goToSheet(2)" style="margin-top:5px; border:none; color:grey; font-size:0.7rem;">Go to Index</button>
                     </div>`;
             } else {
                 return `
@@ -732,7 +779,7 @@
             }
         }
 
-        // --- FLIP LOGIC & RESPONSIVENESS ---
+        // --- FLIP LOGIC ---
         function updateFlipState() {
             const isMobile = window.innerWidth < 768;
             const book = document.getElementById('book');
@@ -748,33 +795,12 @@
                 }
             }
 
-            // --- MOBILE VIEW LOGIC ---
-            // On mobile, we want to center the "Active Page".
-            // Since the book pivot is "left", flipping moves content to the left.
-            // When Closed (0): Active is Right Page. Transform: Center.
-            // When Open (1): Active is Left Page (Back of 0) OR Right Page (Front of 1)?
-            // Usually user reads Left -> Right.
-            // We use simple translateX to shift view.
-            
             if (isMobile) {
-                // Determine scale to fit height
-                const scale = Math.min((window.innerWidth - 20) / 480, (window.innerHeight - 60) / 680);
-                
                 if (currentSheet === 0) {
-                    // Closed: Center the book container normally
-                    book.style.transform = `scale(${scale})`;
+                    book.style.left = '0px';
                 } else {
-                    // Open: The book becomes 2x width visually centered on spine.
-                    // To show RIGHT page (Front of currentSheet): shift left by 50% width?
-                    // To show LEFT page (Back of currentSheet-1): shift right by 50% width?
-                    // For simplicity, let's keep spine centered so user sees spread (small) OR
-                    // shift based on interaction. Here we keep spread centered for "Book feel".
-                    book.style.transform = `scale(${scale * 0.9})`; // Slightly smaller to fit spread
+                    book.style.left = '0px';
                 }
-            } else {
-                // Desktop: Auto Fit Height
-                const scale = Math.min((window.innerWidth * 0.9) / 960, (window.innerHeight * 0.9) / 680);
-                book.style.transform = `scale(${Math.min(scale, 1.2)})`;
             }
         }
         
@@ -804,9 +830,8 @@
         }
 
         window.onload = init;
-        window.onresize = updateFlipState;
+        window.onresize = resizeBook;
 
     </script>
 </body>
 </html>
-
