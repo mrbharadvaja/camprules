@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Fixed: Enabled user scaling for zoom -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Tangguh UCC Camp Rules - Official Handbook</title>
     <style>
         :root {
@@ -14,9 +13,8 @@
             --dark-grey: #222;
             --white: #ffffff;
             --text-grey: #333333;
-            /* Page Dimensions */
-            --page-width: 450px; 
-            --page-height: 700px;
+            --page-width: 480px; 
+            --page-height: 680px;
         }
 
         * {
@@ -27,21 +25,21 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Allow scrolling on body when zoomed */
         html, body {
             background-color: var(--dark-grey);
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
-            overflow: auto; /* Changed from hidden to auto for zoom */
+            overflow: auto; 
+            touch-action: pan-x pan-y;
         }
 
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Start aligns better for scrolling */
+            justify-content: flex-start;
             min-height: 100vh;
         }
 
@@ -49,36 +47,34 @@
         .book-stage {
             flex-grow: 1;
             width: 100%;
-            /* Removed fixed height 100% to allow scroll content */
-            min-height: calc(100vh - 30px); /* Minus footer */
+            min-height: calc(100vh - 35px);
+            position: relative;
+            overflow: visible; /* Important for zoom */
+            background: radial-gradient(circle at center, #3a3a3a 0%, #151515 100%);
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 2500px;
-            overflow: visible; /* Allow book to spill out for zoom */
-            background: radial-gradient(circle at center, #3a3a3a 0%, #151515 100%);
-            position: relative;
-            padding: 20px;
         }
 
+        /* --- BOOK CONTAINER --- */
+        /* Anchored at the spine */
         .book {
-            position: relative;
+            position: absolute;
+            top: 50%;
+            left: 50%;
             width: var(--page-width);
-            height: 100%;
-            transform-origin: left center;
+            height: var(--page-height);
             transform-style: preserve-3d;
-            transition: transform var(--anim-speed) cubic-bezier(0.645, 0.045, 0.355, 1);
-            z-index: 1;
-            cursor: default;
+            transform-origin: 0% 50%; /* Pivot on Left Edge (Spine), Vert Center */
+            transition: transform 0.3s ease-out;
         }
-        .sheet.flipped { transform: rotateY(-180deg); }
-
 
         /* --- SHEETS --- */
         .sheet {
             position: absolute;
             top: 0;
-            left: 50%;
+            left: 0;
             width: 100%;
             height: 100%;
             transform-origin: left center;
@@ -174,20 +170,14 @@
         }
 
         .cover-logo-img { width: 80px; margin: 0 auto 10px auto; display: block; }
-        .page-corner-logo {
-            position: absolute;
-            top: 15px;
-            width: 30px;
-            z-index: 10;
-            opacity: 0.8;
-        }
+        .page-corner-logo { position: absolute; top: 15px; width: 30px; z-index: 10; opacity: 0.8; }
         .back .page-corner-logo { left: 20px; }
         .front .page-corner-logo { right: 20px; }
 
         /* QR & Links Grid */
         .grid-links {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr; /* 4 columns to keep items small */
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             gap: 8px;
             margin-bottom: 10px;
         }
@@ -198,7 +188,6 @@
             border-radius: 5px;
             background: #f9f9f9;
         }
-        /* Enforced small size for helpline QRs */
         .qr-item img { 
             width: 50px !important; 
             height: 50px !important; 
@@ -207,60 +196,35 @@
             margin: 0 auto;
         }
         .qr-label { 
-            display: block; 
-            font-size: 0.6rem; 
-            font-weight: bold; 
-            margin-top: 3px; 
-            color: #333; 
-            line-height: 1.1;
+            display: block; font-size: 0.6rem; font-weight: bold; margin-top: 3px; color: #333; line-height: 1.1; 
         }
 
-        /* Index Columns */
         .index-list {
-            column-count: 2 !important; /* Force 2 columns */
+            column-count: 2 !important; 
             column-gap: 20px;
-            font-size: 0.7rem; /* Slightly smaller to fit */
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            width: 100%;
+            font-size: 0.7rem; 
+            padding: 0; margin: 0;
+            list-style: none; width: 100%;
         }
         .index-list li {
             break-inside: avoid;
-            margin-bottom: 8px;
-            padding-bottom: 4px;
+            margin-bottom: 8px; padding-bottom: 4px;
             border-bottom: 1px dotted #ccc;
-            cursor: pointer;
-            transition: color 0.2s;
-            line-height: 1.3;
+            cursor: pointer; transition: color 0.2s; line-height: 1.3;
         }
         .index-list li:hover { color: var(--parrot-green); font-weight: bold; background: #f9f9f9; }
 
-        /* Buttons */
         .action-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f4f4f4;
-            border: 1px solid #ccc;
-            padding: 8px;
-            margin: 4px 0;
-            text-decoration: none;
-            color: #333;
-            font-weight: 600;
-            font-size: 0.75rem;
-            border-radius: 4px;
-            transition: 0.2s;
-            gap: 5px;
+            display: flex; align-items: center; justify-content: center;
+            background: #f4f4f4; border: 1px solid #ccc;
+            padding: 8px; margin: 4px 0;
+            text-decoration: none; color: #333;
+            font-weight: 600; font-size: 0.75rem;
+            border-radius: 4px; transition: 0.2s; gap: 5px;
         }
         .action-btn:hover { background: var(--mustard-yellow); color: black; }
 
-        /* Language Dropdown */
-        .lang-wrapper {
-            position: absolute;
-            top: 12px;
-            z-index: 50;
-        }
+        .lang-wrapper { position: absolute; top: 12px; z-index: 50; }
         .front .lang-wrapper { right: 20px; } 
         .back .lang-wrapper { right: 20px; }
 
@@ -276,72 +240,50 @@
             cursor: pointer;
         }
 
-        /* --- STATIC FOOTER (Inside Page) --- */
         .static-footer {
-            margin-top: auto;
-            padding-top: 10px;
+            margin-top: auto; padding-top: 10px;
             border-top: 2px solid var(--mustard-yellow);
-            font-size: 0.65rem;
-            color: #444;
-            background: #fcfcfc;
+            font-size: 0.65rem; color: #444; background: #fcfcfc;
         }
         .footer-contacts {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 5px;
-            margin-bottom: 5px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 5px;
+            margin-bottom: 5px; font-size: 0.65rem; text-align: left;
         }
-        .contact-group { flex: 1; min-width: 45%; }
-        .contact-group b { display: block; color: var(--black); margin-bottom: 2px; }
+        .footer-contacts div { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
         .footer-note {
-            text-align: center;
-            font-style: italic;
-            color: var(--bright-red);
-            font-weight: bold;
-            font-size: 0.6rem;
+            text-align: center; font-style: italic; color: var(--bright-red);
+            font-weight: bold; font-size: 0.6rem; margin-bottom: 5px;
         }
         
-        /* Navigation Controls */
         .nav-controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            padding-top: 5px;
-            border-top: 1px solid #eee;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 2px; padding-top: 5px; border-top: 1px solid #eee;
         }
         .nav-btn { background: none; border: 1px solid #ccc; padding: 2px 8px; cursor: pointer; border-radius: 3px; font-size: 0.7rem; }
         .nav-btn:hover { background: var(--mustard-yellow); }
 
-        /* Marquee Footer (External) */
         .status-bar {
-            height: 30px;
-            background: var(--black);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
+            height: 35px; background: var(--black); width: 100%;
+            display: flex; align-items: center; overflow: hidden;
             border-top: 3px solid var(--mustard-yellow);
-            color: var(--parrot-green);
-            font-family: monospace;
-            font-size: 0.85rem;
-            z-index: 1000;
-            position: fixed;
-            bottom: 0;
-            left: 0;
+            color: var(--parrot-green); font-family: monospace; font-size: 0.85rem;
+            z-index: 1000; position: fixed; bottom: 0; left: 0;
         }
         .marquee { display: inline-block; white-space: nowrap; padding-left: 100%; animation: scroll 35s linear infinite; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
 
-        /* --- RESPONSIVE --- */
+        .qr-highlight-box {
+            background: var(--mustard-yellow); color: var(--black);
+            padding: 2px 5px; border-radius: 3px; font-weight: bold; 
+            font-size: 0.65rem; display: block; margin-top: 3px;
+        }
+
         @media (max-width: 768px) {
             :root { --page-width: 90vw; --page-height: 80vh; }
-            .book-stage { padding: 10px; }
+            .book-stage { padding: 10px; align-items: center; }
             .page-content { padding: 15px; }
-            .grid-links { grid-template-columns: 1fr 1fr; } /* 2 cols on mobile for QRs */
-            /* Ensure images fit better on mobile */
-            .cover-visual-large { height: 160px; }
-            .page-visual { height: 110px; }
+            .grid-links { grid-template-columns: 1fr 1fr; }
+            .footer-contacts { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -368,25 +310,37 @@
             return new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         }
 
-        // --- GREETING FUNCTION (Papua Time UTC+9) ---
-        function getPapuaGreeting() {
+        function getPapuaGreeting(lang) {
             const date = new Date();
             const utc = date.getTime() + (date.getTimezoneOffset() * 60000);
             const papuaTime = new Date(utc + (3600000 * 9));
             const hour = papuaTime.getHours();
-            if (hour >= 5 && hour < 12) return "☀️ Good Morning";
-            if (hour >= 12 && hour < 17) return "🌤️ Good Afternoon";
-            if (hour >= 17 && hour < 21) return "🌇 Good Evening";
-            return "🌙 Good Night";
+            
+            let greeting = "";
+            if (hour >= 5 && hour < 12) greeting = "Good Morning";
+            else if (hour >= 12 && hour < 17) greeting = "Good Afternoon";
+            else if (hour >= 17 && hour < 21) greeting = "Good Evening";
+            else greeting = "Good Night";
+
+            if (lang === 'id') {
+                if (hour >= 5 && hour < 10) return "☀️ Selamat Pagi";
+                if (hour >= 10 && hour < 15) return "🌤️ Selamat Siang";
+                if (hour >= 15 && hour < 19) return "🌇 Selamat Sore";
+                return "🌙 Selamat Malam";
+            }
+             if (lang === 'jp') {
+                if (hour >= 5 && hour < 11) return "☀️ おはようございます";
+                if (hour >= 11 && hour < 18) return "🌤️ こんにちは";
+                return "🌙 こんばんは";
+            }
+            if (greeting === "Good Morning") return "☀️ " + greeting;
+            if (greeting === "Good Afternoon") return "🌤️ " + greeting;
+            if (greeting === "Good Evening") return "🌇 " + greeting;
+            return "🌙 " + greeting;
         }
 
         function getIndoGreeting() {
-            // Simple mapping for ID greeting
-            const greeting = getPapuaGreeting();
-            if(greeting.includes("Morning")) return "☀️ Selamat Pagi";
-            if(greeting.includes("Afternoon")) return "🌤️ Selamat Siang";
-            if(greeting.includes("Evening")) return "🌇 Selamat Sore";
-            return "🌙 Selamat Malam";
+             return getPapuaGreeting('id');
         }
 
         // --- CONTENT DATA ---
@@ -398,14 +352,14 @@
                     title: "TANGGUH UCC PROJECT",
                     subtitle: "CONTRACTOR CAMP RULES & GUIDELINES (2026–2027)",
                     body: `<div style="text-align:center; font-size:0.85rem;">
-                        <div style="color:var(--mustard-yellow); font-weight:bold; margin-bottom:5px; text-transform:uppercase;">${getPapuaGreeting()}</div>
+                        <div style="color:var(--mustard-yellow); font-weight:bold; margin-bottom:5px; text-transform:uppercase;">${getPapuaGreeting('en')}</div>
                         <p style="text-align:center; margin-bottom:5px;"><b>Client:</b> BP Indonesia | <b>Contractor:</b> JGC</p>
                         <p style="text-align:center; margin-bottom:5px;"><b>Created by:</b> Deepak Sharma</p>
                         <p style="text-align:center;"><b>Date:</b> ${getDate()}</p>
                         <div class="qr-container" style="margin: 10px 0;">
                             <div class="qr-box">
                                 <img src="https://i.imgur.com/AX4mx36.png" alt="Rules" style="width: 50px !important; height: 50px !important;">
-                                <span style="display:block; font-size:0.6rem; font-weight:bold; margin-top:3px;">Scan Rules</span>
+                                <span class="qr-highlight-box">Scan Rules</span>
                             </div>
                         </div>
                     </div>`
@@ -429,8 +383,8 @@
                                 <li><b>Camp Maintenance:</b> +62 811-1089-4447</li>
                                 <li><b>Help Desk:</b> +62 811-1089-4447</li>
                                 <li><b>GDSK Incharge (Victor):</b> 0812 8222 0053</li>
-                                <li><b>JGC Camp team (Deepak):</b> 0813 2288 259</li>
-                                <li><b>JGC Camp Team (Mario):</b> 0823 1678 5900</li>
+                                <li><b>JGC Manager (Deepak):</b> 0813 2288 259</li>
+                                <li><b>Camp Team (Mario):</b> 0823 1678 5900</li>
                             </ul>
                         </div>
                         <h3>🔗 Quick Access Guides</h3>
@@ -452,7 +406,7 @@
                     title: "INDEX / CONTENTS",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true",
                     body: `<ul class="index-list">
-                        <li onclick="goToSheet(2)">1. Helpline & Links</li>
+                        <li onclick="goToSheet(1)">1. Helpline & Links</li>
                         <li onclick="goToSheet(2)">2. Emergency & Hotline</li>
                         <li onclick="goToSheet(3)">3. Mandatory Drug Dec.</li>
                         <li onclick="goToSheet(3)">4. Check-In & Check-Out</li>
@@ -465,11 +419,11 @@
                         <li onclick="goToSheet(7)">11. Alcohol & Drugs</li>
                         <li onclick="goToSheet(7)">12. Fire & Electrical</li>
                         <li onclick="goToSheet(8)">13. Dining Rules</li>
-                        <li onclick="goToSheet(8)">14. Laundry Service</li>
+                        <li onclick="goToSheet(9)">14. Laundry Service</li>
                         <li onclick="goToSheet(9)">15. Waste Segregation</li>
-                        <li onclick="goToSheet(9)">16. Vehicle & Parking</li>
+                        <li onclick="goToSheet(10)">16. Vehicle & Parking</li>
                         <li onclick="goToSheet(10)">17. Facilities</li>
-                        <li onclick="goToSheet(10)">18. Local Respect</li>
+                        <li onclick="goToSheet(11)">18. Local Respect</li>
                         <li onclick="goToSheet(11)">19. Reporting & Closing</li>
                     </ul>`
                 },
@@ -499,13 +453,13 @@
                     title: "3.0 CHECK-IN & OUT",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/5.png?raw=true",
                     body: `<h3>Check-In (Arrival)</h3>
-                    <ul><li>Report to Camp Office upon arrival.</li><li>Complete registration and receive room allocation.</li><li>Collect camp ID and Canteen Token. Follow induction.</li></ul>
+                    <ul><li>Report to Camp Office upon arrival.</li><li>Complete registration and receive room allocation with canteen Token.</li><li>Collect camp ID. Follow induction.</li></ul>
                     <div class="qr-container">
                         <div class="qr-item"><img src="https://i.imgur.com/ivsPL5x.png"><span class="qr-label">Induction Video</span></div>
                         <a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBldzyivV6tQYZc4oSAKh5cATDOFZEMi_eodIOP-B_LzUM?e=Qpc0oU" target="_blank" class="action-btn">Watch Induction</a>
                     </div>
                     <h3>Check-Out (Departure)</h3>
-                    <ul><li>Inform Camp Office before your departure date/time.Get Checkout Token</li><li>Return room key,Towel,Laundry Bag. Clear room condition.Keep your personal Belongings in Camp office or Your Friends Room.</li></ul>
+                    <ul><li>Report Camp Office before your departure date/time.</li><li>Return room key if Available and Get the Checkout Token. Clear room condition.Keep your personal Belongings to Camp office or Friends Room during Rota off.</li></ul>
                     <div class="box-warning">Staying in camp without valid check-in is strictly prohibited.</div>`
                 },
                 {   // 7. DISCIPLINE
@@ -555,12 +509,12 @@
                 {   // 15. FIRE SAFETY
                     title: "11.1 FIRE SAFETY",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/14.png?raw=true",
-                    body: `<h3>🔥 Everyone's Responsibility</h3><ul><li>Do not tamper with alarms, detectors, or extinguishers.</li><li>Keep emergency exits clear.</li></ul><h3>In Case of Fire:</h3><p>✅ Raise Alarm → ✅ Call Security → ✅ Evacuate → ✅ Muster Point</p>`
+                    body: `<h3>🔥 Everyone's Responsibility</h3><ul><li>Do not tamper with alarms, detectors, or extinguishers.</li><li>Keep emergency exits clear.</li></ul><h3>In Case of Fire:</h3><p>✅ Raise Alarm → ✅ Call Security → ✅ Evacuate → ✅ Muster Point → ✅ Wait for Instructions</p>`
                 },
                 {   // 16. DINING
                     title: "12.0 DINING HALL",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/15.png?raw=true",
-                    body: `<h3>🍽️ Canteen Rules</h3><ul><li>Wash hands before meals.</li><li>Proper dress required (No sleeveless/dirty PPE).</li><li><b>No Take-Away:</b> Removing food/utensils is prohibited to prevent pests.</li><li>Do not waste food.</li><li>Clear your tray after eating.</li></ul>`
+                    body: `<h3>🍽️ Canteen Rules</h3><ul><li>Wash hands before meals.</li><li>Proper dress required (No sleeveless/dirty PPE/No Workout Dresses).</li><li><b>No Take-Away:</b> Removing food/utensils is prohibited to prevent pests.</li><li>Do not waste food.</li><li>Clear your tray after eating.</li></ul>`
                 },
                 {   // 17. LAUNDRY
                     title: "13.0 LAUNDRY SERVICE",
@@ -574,7 +528,7 @@
                             <a href="https://play.google.com/store/apps/details?id=com.gdsk.ghs_ubadari&pcampaignid=web_share" target="_blank" class="action-btn" style="width:45%">Android App</a>
                         </div>
                     </div>
-                    <p>Please follow laundry instructions inside the app to avoid delays and missing items. <i>Manual log book available if app fails.</i></p>`
+                    <p>Please follow laundry instructions inside the app to avoid delays and missing items. <i>You can Use Manual log book available in each room, if app fails,or Not Working.</i></p>`
                 },
                 {   // 18. WASTE
                     title: "14.0 WASTE SEGREGATION",
@@ -606,7 +560,7 @@
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/22.png?raw=true",
                     body: `<h3>Thank You</h3><p>Thank you for your cooperation and discipline. A safe and comfortable camp is only possible when everyone respects the rules and supports the system.</p><p>Your responsible behavior helps:</p><ul><li>✅ protect people</li><li>✅ prevent incidents</li><li>✅ ensure project success</li></ul><p><b>One Team UCC</b></p>`
                 },
-                {   // 24. LINKS
+                {   // 24. LINKS (No Next Button)
                     title: "IMPORTANT LINKS",
                     image: "https://github.com/mrbharadvaja/camprules/blob/main/23.png?raw=true",
                     body: `<h3>Quick Access</h3><a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">✅ Drug Declaration Form</a><a href="https://apps.apple.com/us/app/ghs-ubadari/id6757686938" target="_blank" class="action-btn">🍎 Laundry App (iOS)</a><a href="https://play.google.com/store/apps/details?id=com.gdsk.ghs_ubadari&pcampaignid=web_share" target="_blank" class="action-btn">🤖 Laundry App (Android)</a><br><button class="action-btn" onclick="goToSheet(0)" style="background:var(--mustard-yellow);">RETURN TO COVER</button>`
@@ -617,7 +571,7 @@
                  { type: "cover", image: "https://github.com/mrbharadvaja/camprules/blob/main/cover%20image.png?raw=true", title: "PROYEK TANGGUH UCC", subtitle: "ATURAN & PANDUAN KONTRAKTOR CAMP (2026–2027)", body: `<div style="text-align:center; font-size:0.85rem;"><div class="greeting-text">${getIndoGreeting()}</div><p style="text-align:center; margin-bottom:5px;"><b>Klien:</b> BP Indonesia | <b>Kontraktor:</b> JGC</p><p style="text-align:center; margin-bottom:5px;"><b>Dibuat oleh:</b> Deepak Sharma</p><p style="text-align:center;"><b>Tanggal:</b> ${getDate()}</p><div class="qr-container"><div class="qr-box"><img src="https://i.imgur.com/AX4mx36.png" style="width: 50px !important; height: 50px !important;"><span class="qr-text" style="background:var(--mustard-yellow); color:black;">Pindai Aturan</span></div></div></div>` },
                  { title: "PESAN SAMBUTAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/1.png?raw=true", body: `<p>Selamat datang di Kontraktor Camp Tangguh UCC. Camp ini adalah rumah kedua Anda. Komitmen kami adalah menyediakan lingkungan yang aman, tertib, dan nyaman.</p><p>Aturan ini untuk menjaga:</p><ul><li>✅ Keselamatan</li><li>✅ Kebersihan</li><li>✅ Saling Menghormati</li><li>✅ Kelancaran Operasi</li></ul><p>Kerja sama Anda sangat penting.</p><p><b>One Team UCC</b></p>` },
                  { title: "HELPLINE & TAUTAN", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<div style="background:#f0f0f0; padding:10px; border-radius:5px; margin-bottom:15px;"><h3 style="margin-top:0;">📞 Kontak Camp</h3><ul style="font-size:0.75rem; margin-bottom:0;"><li><b>Maintenance:</b> +62 811-1089-4447</li><li><b>Help Desk:</b> +62 811-1089-4447</li><li><b>GDSK Incharge (Victor):</b> 0812 8222 0053</li><li><b>JGC Manager (Deepak):</b> 0813 2288 259</li><li><b>Tim Camp (Mario):</b> 0823 1678 5900</li></ul></div><h3>🔗 Panduan Akses Cepat</h3><div class="grid-links"><div class="qr-item"><a href="https://i.imgur.com/A7KbjKK.png" target="_blank"><img src="https://i.imgur.com/A7KbjKK.png"></a><span class="qr-label">Panduan Situs</span></div><div class="qr-item"><a href="https://i.imgur.com/czHvVds.png" target="_blank"><img src="https://i.imgur.com/czHvVds.png"></a><span class="qr-label">Support Camp</span></div><div class="qr-item"><a href="https://i.imgur.com/AX4mx36.png" target="_blank"><img src="https://i.imgur.com/AX4mx36.png"></a><span class="qr-label">PDF Aturan</span></div><div class="qr-item"><a href="https://i.imgur.com/C97dcCY.png" target="_blank"><img src="https://i.imgur.com/C97dcCY.png"></a><span class="qr-label">Darurat</span></div></div><div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;"><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQAcyF20d_NnQYpL_R67iKQFAU6BN2XsG6dUrROiwIjBg8k?e=tPugor" target="_blank" class="action-btn">📺 Fam Video (Eng)</a><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBuq6Qd_zq-TqnGq4Z-mMTVAaKjGHESYH8BPFpQn9SSflE?e=TpsZay" target="_blank" class="action-btn">📺 Fam Video (Ind)</a><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQAz5kwWQ2imTZ7S0GU0UBJAAXlZB-4PceVp71wXgcoJ310?e=G2nHRm" target="_blank" class="action-btn">🎧 Rules Audio (Eng)</a><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCgF89THYByT4O2JroKJgn9AVcKlUvAHmlhvWBzvDb2A3k?e=sPxw9V" target="_blank" class="action-btn">🎧 Rules Audio (Ind)</a></div>` },
-                 { title: "DAFTAR ISI", image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true", body: `<ul class="index-list"><li onclick="goToSheet(2)">1. Helpline & Links</li><li onclick="goToSheet(2)">2. Darurat & Hotline</li><li onclick="goToSheet(3)">3. Deklarasi Narkoba</li><li onclick="goToSheet(3)">4. Masuk Camp</li><li onclick="goToSheet(4)">5. Disiplin Umum</li><li onclick="goToSheet(4)">6. Kebijakan Hormat</li><li onclick="goToSheet(5)">7. Aturan Kamar</li><li onclick="goToSheet(5)">8. Jam Tenang</li><li onclick="goToSheet(6)">9. Kebersihan</li><li onclick="goToSheet(6)">10. Merokok</li><li onclick="goToSheet(7)">11. Alkohol & Narkoba</li><li onclick="goToSheet(7)">12. Keselamatan Api</li><li onclick="goToSheet(8)">13. Kantin</li><li onclick="goToSheet(8)">14. Laundry</li><li onclick="goToSheet(9)">15. Sampah</li><li onclick="goToSheet(9)">16. Kendaraan</li><li onclick="goToSheet(10)">17. Fasilitas</li><li onclick="goToSheet(10)">18. Hormati Papua</li><li onclick="goToSheet(11)">19. Pelaporan</li></ul>` },
+                 { title: "DAFTAR ISI", image: "https://github.com/mrbharadvaja/camprules/blob/main/2.png?raw=true", body: `<ul class="index-list"><li onclick="goToSheet(2)">1. Helpline & Links</li><li onclick="goToSheet(2)">2. Darurat & Hotline</li><li onclick="goToSheet(2)">3. Deklarasi Narkoba</li><li onclick="goToSheet(3)">4. Masuk Camp</li><li onclick="goToSheet(4)">5. Disiplin Umum</li><li onclick="goToSheet(4)">6. Kebijakan Hormat</li><li onclick="goToSheet(5)">7. Aturan Kamar</li><li onclick="goToSheet(5)">8. Jam Tenang</li><li onclick="goToSheet(6)">9. Kebersihan</li><li onclick="goToSheet(6)">10. Merokok</li><li onclick="goToSheet(7)">11. Alkohol & Narkoba</li><li onclick="goToSheet(7)">12. Keselamatan Api</li><li onclick="goToSheet(8)">13. Kantin</li><li onclick="goToSheet(8)">13. Laundry</li><li onclick="goToSheet(9)">14. Sampah</li><li onclick="goToSheet(9)">15. Kendaraan</li><li onclick="goToSheet(10)">16. Fasilitas</li><li onclick="goToSheet(10)">17. Hormati Papua</li><li onclick="goToSheet(11)">18. Pelaporan</li></ul>` },
                  { title: "1.0 DARURAT", image: "https://github.com/mrbharadvaja/camprules/blob/main/3.png?raw=true", body: `<p>Dalam keadaan darurat, tetap tenang dan hubungi tim terkait.</p><ul style="font-weight:bold;"><li>🚨 Security SOS: +62 811-1089-4447</li><li>🏥 Klinik: Ext. 118</li><li>🔥 Kebakaran: Ext. 911</li><li>⚡ Maintenance: +62 811-1089-4447</li></ul><h3>Langkah Darurat:</h3><ol><li>Tetap Tenang</li><li>Hubungi Bantuan</li><li>Ke Titik Kumpul</li><li>Ikuti Arahan Security</li></ol>` },
                  { title: "2.0 DEKLARASI NARKOBA", image: "https://github.com/mrbharadvaja/camprules/blob/main/4.png?raw=true", body: `<h3>Wajib Sebelum Berangkat</h3><p>Semua penghuni wajib mengisi formulir Deklarasi Narkoba sebelum perjalanan.</p><a href="https://forms.gle/dBpYUxxH4XTvYTHK7" target="_blank" class="action-btn">👉 Isi Deklarasi</a><div class="box-warning"><b>Penting:</b> Deklarasi palsu dapat menyebabkan tindakan disiplin tegas.</div>` },
                  { title: "3.0 CHECK-IN & OUT", image: "https://github.com/mrbharadvaja/camprules/blob/main/5.png?raw=true", body: `<h3>Check-In</h3><ul><li>Lapor ke Kantor Camp saat tiba.</li><li>Lengkapi registrasi.</li><li>Ambil ID Camp. Ikuti induksi.</li></ul><div class="qr-container"><div class="qr-item"><img src="https://i.imgur.com/ivsPL5x.png"><span class="qr-label">Video Induksi</span></div><a href="https://1drv.ms/v/c/914d6cd9be74140f/IQBldzyivV6tQYZc4oSAKh5cATDOFZEMi_eodIOP-B_LzUM?e=Qpc0oU" target="_blank" class="action-btn">Tonton Video</a></div><h3>Check-Out</h3><ul><li>Info Kantor Camp sebelum berangkat.</li><li>Kembalikan kunci.</li></ul><div class="box-warning">Dilarang tinggal tanpa check-in valid.</div>` },
@@ -652,20 +606,20 @@
                  { title: "4.0 行動規範", image: "https://github.com/mrbharadvaja/camprules/blob/main/6.png?raw=true", body: `<p>共同生活の場です。規律を守ってください。</p><ul><li>プロとして行動する。</li><li>指示に従う。</li><li>争いを避ける。</li><li>違反は利用制限対象。</li></ul>` },
                  { title: "5.0 尊重ポリシー", image: "https://github.com/mrbharadvaja/camprules/blob/main/7.png?raw=true", body: `<h3>ゼロトレランス</h3><p>以下は<b>厳禁</b>です：</p><ul class="highlight-red"><li>ハラスメント、差別</li><li>脅迫、暴力</li></ul><p>全員を尊重してください。</p><a href="https://1drv.ms/u/c/914d6cd9be74140f/IQCU3GdfvLyzRLmfyYyKbtKxAY3_suoHSAuKgqm4BEH9fqY?e=I3bds3" target="_blank" class="action-btn">🎧 音声を聴く</a>` },
                  { title: "6.0 部屋のルール", image: "https://github.com/mrbharadvaja/camprules/blob/main/8.png?raw=true", body: `<h3>基準</h3><ul><li>部屋割当は管理側のみ。</li><li>無断変更禁止。</li><li>無許可の人物を入れない。</li><li>部屋を清潔に。</li><li>破損は請求対象。</li></ul>` },
-                 { title: "7.0 静粛時間", image: "https://github.com/mrbharadvaja/camprules/blob/main/9.png?raw=true", body: `<h3>🕘 21:00 – 05:00</h3><ul><li>静かにしてください。</li><li>大音量禁止。</li><li>休息中の人を尊重。</li><li>迷惑行為は処分対象。</li></ul>` },
+                 { title: "7.0 静粛時間", image: "https://github.com/mrbharadvaja/camprules/blob/main/9.png?raw=true", body: `<h3>🕘 21:00 – 05:00</h3><ul><li>部屋・廊下では静かに。</li><li>夜間の大音量音楽・大声・騒がしい通話は禁止。</li><li>休息中の人を尊重。</li><li>繰り返し迷惑行為は処分対象。</li></ul>` },
                  { title: "8.0 衛生管理", image: "https://github.com/mrbharadvaja/camprules/blob/main/10.png?raw=true", body: `<h3>必須基準</h3><ul><li>ゴミはゴミ箱へ。</li><li><b>トイレ:</b> 異物を流さないでください。</li><li>衛生問題は直ちに報告。</li></ul>` },
                  { title: "9.0 喫煙", image: "https://github.com/mrbharadvaja/camprules/blob/main/11.png?raw=true", body: `<h3>🚭 指定場所のみ</h3><ul><li>喫煙は指定場所でのみ許可。</li><li>室内禁止。</li><li>吸い殻は適切に処理。</li></ul>` },
                  { title: "10.0 アルコール", image: "https://github.com/mrbharadvaja/camprules/blob/main/12.png?raw=true", body: `<h3>❌ 禁止</h3><p>所持・使用は即時退去処分の対象です。</p>` },
                  { title: "11.0 電気安全", image: "https://github.com/mrbharadvaja/camprules/blob/main/13.png?raw=true", body: `<h3>⚡ 火災防止</h3><ul><li>室内調理禁止。</li><li>熱源機器の使用禁止。</li><li>タコ足配線禁止。</li></ul>` },
                  { title: "11.1 防火安全", image: "https://github.com/mrbharadvaja/camprules/blob/main/14.png?raw=true", body: `<h3>🔥 全員の責任</h3><ul><li>警報器に触れない。</li><li>非常口を塞がない。</li></ul><h3>火災時:</h3><p>✅ 警報 → ✅ 連絡 → ✅ 避難 → ✅ 集合</p>` },
                  { title: "12.0 食堂", image: "https://github.com/mrbharadvaja/camprules/blob/main/15.png?raw=true", body: `<h3>🍽️ ルール</h3><ul><li>手洗い必須。</li><li>適切な服装。</li><li><b>持ち出し禁止:</b> 害虫防止のため。</li><li>食後は片付ける。</li></ul>` },
-                 { title: "13.0 ランドリー", image: "https://github.com/mrbharadvaja/camprules/blob/main/16.png?raw=true", body: `<h3>🧺 アプリ必須</h3><p>アプリ使用: <b>GHS Ubadari</b>. ID/Pass = 部屋番号。</p><p class="highlight-red">自室での洗濯・干し物は禁止。</p><div style="background:#f0f0f0; padding:10px; text-align:center;"><p><b>ダウンロード:</b></p><div style="display:flex;gap:10px;justify-content:center;"><a href="#" class="action-btn">iOS</a><a href="#" class="action-btn">Android</a></div></div><p><i>注：アプリ不具合時は手書きログを使用。</i></p>` },
-                 { title: "14.0 ゴミ分別", image: "https://github.com/mrbharadvaja/camprules/blob/main/17.png?raw=true", body: `<h3>♻️ 環境保護</h3><p>緑（有機）、黄（無機）、赤（有害）。ポイ捨て禁止。</p>` },
-                 { title: "15.0 車両", image: "https://github.com/mrbharadvaja/camprules/blob/main/18.png?raw=true", body: `<h3>🚗 制限 10 km/h</h3><ul><li>バック駐車。</li><li>歩行者優先。</li></ul>` },
-                 { title: "16.0 施設", image: "https://github.com/mrbharadvaja/camprules/blob/main/19.png?raw=true", body: `<h3>🏋️ ガイドライン</h3><ul><li>きれいに使う。</li><li>時間厳守。</li><li>安全規則を守る。</li></ul><a href="https://i.imgur.com/DBHITAd.png" target="_blank" class="action-btn">🔎 地図を見る</a>` },
-                 { title: "17.0 地域尊重", image: "https://github.com/mrbharadvaja/camprules/blob/main/20.png?raw=true", body: `<h3>🌿 地域の誇り</h3><p>私たちはゲストです。文化と伝統を尊重し、礼儀正しく行動しましょう。</p>` },
-                 { title: "18.0 報告", image: "https://github.com/mrbharadvaja/camprules/blob/main/21.png?raw=true", body: `<h3>📩 フィードバック</h3><p>危険箇所や提案は公式ルートで報告してください。機密は守られます。</p>` },
-                 { title: "締め", image: "https://github.com/mrbharadvaja/camprules/blob/main/22.png?raw=true", body: `<h3>感謝</h3><p>安全で快適なキャンプのためにご協力をお願いします。</p><p><b>One Team UCC</b></p>` },
+                 { title: "13.0 ランドリー", image: "https://github.com/mrbharadvaja/camprules/blob/main/16.png?raw=true", body: `<h3>🧺 アプリ必須</h3><p>ランドリーサービスは公式アプリで運用されます：<b>GHS Ubadari</b>。</p><div style="margin-top:15px; text-align:center; padding:15px; background:#f5f5f5; border-radius:5px;"><p style="font-size:0.9rem; margin-bottom:10px; font-weight:bold;">今すぐダウンロード:</p><div style="display:flex; gap:10px; justify-content:center;"><a href="https://apps.apple.com/us/app/ghs-ubadari/id6757686938" target="_blank" class="store-btn">🍎 iOS App Store</a><a href="https://play.google.com/store/apps/details?id=com.gdsk.ghs_ubadari&pcampaignid=web_share" target="_blank" class="store-btn">🤖 Android Play Store</a></div></div><p style="margin-top:10px; font-size:0.9rem;">遅延や紛失防止のため、アプリ内手順を必ず遵守してください。</p>` },
+                 { title: "廃棄物分別", body: `<h3>♻️ 環境保護</h3><ul><li>分別ルールに従い正しいゴミ箱へ。</li><li>部屋・廊下・共用部でのポイ捨て禁止。</li><li>自然を尊重し周辺を清潔に。</li><li>清掃案内・指示に従う。</li></ul>` },
+                 { type: "standard", title: "車両・駐車", body: `<h3>🚗 制限速度と安全</h3><ul><li>キャンプ内速度制限を厳守。</li><li>指定場所のみ駐車。</li><li>道路・歩道・緊急通路を塞がない。</li><li>歩行者優先で慎重に運転。</li></ul>` },
+                 { type: "standard", title: "施設利用", body: `<h3>🏋️ 利用ガイドライン</h3><ul><li>施設は共用です。責任ある利用をお願いします。</li><li>利用時間・予約手順を守る。</li><li>使用後は清掃し整える。</li><li>ジム・娯楽エリアでは安全規則遵守。</li><li>破損・乱用は利用制限の対象。</li></ul><div style="text-align:center; margin-top:20px;"><img src="https://i.imgur.com/DBHITAd.png" alt="地図" style="width:100%; border:1px solid #ccc; border-radius:4px;"><a href="https://i.imgur.com/DBHITAd.png" target="_blank" class="link-btn" style="display:inline-block; margin-top:5px; padding:5px 10px; font-size:0.8rem;">🔎 地図を見る</a></div>` },
+                 { type: "standard", title: "パプアへの敬意", body: `<h3>🌿 地域の誇り</h3><p>私たちはパプアの地における“ゲスト”です。常に敬意とプロ意識を持って行動してください。</p><ul><li>地域社会・文化・伝統を尊重する。</li><li>移動中やキャンプ外でも礼儀正しく。</li><li>騒音・争い・不敬な行動は禁止。</li><li>規律と清潔を通じて地域との良好な関係を築く。</li></ul><p>と共に、安全なプロジェクトと尊重ある環境を作りましょう。</p>` },
+                 { type: "standard", title: "報告・提案", body: `<h3>📩 フィードバック</h3><ul><li>改善のためのご意見を歓迎します。</li><li>公式ルートで提案を提出。</li><li>危険箇所は直ちに報告。</li><li>重大案件（ハラスメント、脅迫、暴力）は機密で通報。</li><li>管理側が確認し必要対応を実施します。</li></ul>` },
+                 { type: "standard", title: "締めのメッセージ", body: `<h3>感謝</h3><p>安全で快適なキャンプのためにご協力をお願いします。</p><p><b>One Team UCC</b></p>` },
                  { title: "リンク", image: "https://github.com/mrbharadvaja/camprules/blob/main/23.png?raw=true", body: `<a href="#" class="action-btn">✅ 申告フォーム</a><br><button class="action-btn" onclick="goToSheet(0)" style="background:var(--mustard-yellow);">表紙に戻る</button>` }
             ]
         };
@@ -679,40 +633,85 @@
         function init() {
             window.addEventListener('resize', resizeBook);
             setLang('en');
-            resizeBook();
+            // Initial call to set size
+            setTimeout(resizeBook, 100);
         }
 
-        // --- RESIZE LOGIC (Auto-Fit) ---
+        // --- RESIZE LOGIC (Auto-Fit for Mobile Spread) ---
         function resizeBook() {
             const book = document.getElementById('book');
+            if(!book) return;
+            
             const pageWidth = 480;
             const pageHeight = 680;
             const isMobile = window.innerWidth < 768;
             
-            // Visual width: Desktop = 2 pages (Spread), Mobile = 1 page
-            const visualWidth = isMobile ? pageWidth : (pageWidth * 2);
+            // Always calculate scale based on DOUBLE WIDTH (Spread)
+            // This ensures on mobile, the whole spread fits (small), allowing zoom.
+            const visualWidth = pageWidth * 2; 
             
-            // Calculate scale to fit screen minus margins
-            const availW = window.innerWidth * 0.95;
-            const availH = (window.innerHeight - 40) * 0.95; // 40px for footer
+            const margin = isMobile ? 10 : 20;
+            const availW = window.innerWidth - margin;
+            const availH = (window.innerHeight - 40) - margin; 
             
-            const scale = Math.min(availW / visualWidth, availH / pageHeight);
-            const finalScale = Math.min(scale, 1.2); // Max zoom cap
+            // Base Scale to Fit Screen
+            let scale = Math.min(availW / visualWidth, availH / pageHeight);
             
-            book.style.transform = `scale(${finalScale})`;
+            // On Mobile, allow it to be a bit bigger initially so text isn't microscopic
+            if(isMobile && scale < 0.6) scale = 0.6; 
             
-            if (isMobile) {
-                // If mobile, center the container so single page is visible
-                book.style.left = '0px'; 
+            // Center Logic:
+            // Since .book is centered with CSS (top:50%, left:50%),
+            // we just need to adjust translateX to correct the spread view.
+            
+            let translateX = 0;
+            
+            if (currentSheet === 0) {
+                 // Closed Book. Show Right Page.
+                 // Move spine left by 50% of page width to center the Cover.
+                 translateX = -(pageWidth / 2);
             } else {
-                // If desktop, center the spine
+                 // Open Book. Spine is center.
+                 // Center aligns the Spine to screen center.
+                 translateX = 0;
             }
+            
+            // Apply Transform: Translate First, Then Scale
+            book.style.transform = `scale(${scale}) translate(${translateX}px, -50%)`;
+        }
+
+        function nextSheet() {
+            if (currentSheet < totalSheets) {
+                currentSheet++;
+                updateFlipState();
+            }
+        }
+
+        function prevSheet() {
+            if (currentSheet > 0) {
+                currentSheet--;
+                updateFlipState();
+            }
+        }
+        
+        function goToSheet(sheetIndex) {
+            currentSheet = sheetIndex;
+            updateFlipState();
+        }
+        
+        function goToPage(pageNum) { // Keep compatibility if used
+            currentSheet = 0;
+            updateFlipState();
         }
 
         function setLang(lang) {
             currentLang = lang;
-            document.getElementById('footer-msg').innerText = footerTexts[lang];
+            const el = document.getElementById('footer-msg');
+            if (el) el.innerText = footerTexts[lang];
             renderBook();
+            
+            const dateSpan = document.getElementById(`current-date${lang === 'en' ? '' : '-' + lang}`);
+            if(dateSpan) dateSpan.innerText = getCurrentDate();
         }
 
         function renderBook() {
@@ -723,13 +722,12 @@
             const sheetsCount = Math.ceil(data.length / 2);
             totalSheets = sheetsCount;
 
-            // Generate Sheets
             for (let i = 0; i < sheetsCount; i++) {
                 const sheet = document.createElement('div');
                 sheet.className = 'sheet';
                 sheet.id = `sheet-${i}`;
                 sheet.style.zIndex = (sheetsCount - i);
-                
+
                 const frontData = data[i * 2];
                 const backData = data[i * 2 + 1];
 
@@ -753,7 +751,6 @@
         }
 
         function getPageHTML(data, pageNum) {
-            // Reusable Static Footer
             const staticFooter = `
                 <div class="static-footer">
                     <div class="footer-contacts">
@@ -767,7 +764,7 @@
                         <button class="nav-btn" onclick="prevSheet()">&#8592;</button>
                         <button class="nav-btn" onclick="goToSheet(2)" style="font-weight:bold; color:var(--parrot-green); font-size:1.2rem; line-height:1;">🏠</button>
                         <span>${pageNum}</span>
-                        ${pageNum === 24 || pageNum === 23 ? '' : '<button class="nav-btn" onclick="nextSheet()">&#8594;</button>'}
+                        ${pageNum >= (totalSheets*2)-1 ? '' : '<button class="nav-btn" onclick="nextSheet()">&#8594;</button>'}
                     </div>
                 </div>
             `;
@@ -813,9 +810,6 @@
 
         // --- FLIP LOGIC ---
         function updateFlipState() {
-            const isMobile = window.innerWidth < 768;
-            const book = document.getElementById('book');
-
             for (let i = 0; i < totalSheets; i++) {
                 const sheet = document.getElementById(`sheet-${i}`);
                 if (i < currentSheet) {
@@ -826,39 +820,7 @@
                     sheet.style.zIndex = totalSheets - i;
                 }
             }
-
-            if (isMobile) {
-                if (currentSheet === 0) {
-                    book.style.left = '0px';
-                } else {
-                    book.style.left = '0px';
-                }
-            }
-        }
-        
-        // Navigation Functions
-        function nextSheet() {
-            if (currentSheet < totalSheets) {
-                currentSheet++;
-                updateFlipState();
-            }
-        }
-
-        function prevSheet() {
-            if (currentSheet > 0) {
-                currentSheet--;
-                updateFlipState();
-            }
-        }
-        
-        function goToSheet(sheetIndex) {
-            currentSheet = sheetIndex;
-            updateFlipState();
-        }
-        
-        function goToPage(pageNum) { // Keep compatibility if used
-            currentSheet = 0;
-            updateFlipState();
+            resizeBook();
         }
 
         window.onload = init;
@@ -867,8 +829,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
